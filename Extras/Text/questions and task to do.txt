@@ -1,0 +1,15 @@
+format the serial column in the excel
+ 
+disable the buttons if items are already in the handover process
+
+put condition that if the approval has not been given then further the form should not display
+
+take care of manager employee thing
+
+the emaail from m1 should go to e1 and e2 both cuz e2 has to open the form so he needs it 
+
+chaneg welcome user to 
+welcome (username)
+add personal inventory page
+question : 
+is the condition column necessary in the inventory database cuz to know the current condition we have to call the person and ask them cuz in database it will be the condition the item was received in not the condition it is currently in 

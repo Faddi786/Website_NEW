@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Handover Form</title>
+<style>
+  table {
+    border-collapse: collapse;
+    font-size: 10px !important;
+  }
+  th, td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
+    font-size: 10px !important;
+  }
+  th {
+    font-size: 10px !important;
+    background-color: lightgray;
+  }
+</style>
+</head>
+<body>
+
+<h2>Handover Form</h2>
+
+<form id="handoverForm" enctype="multipart/form-data">
+
+  <label>Handover Person Name:</label>
+  <label>Loading Handover Person Name ....</label>
+<br><br>
+
+    <label >Origin of Site:</label>
+    <label> Loading Origin of Site ....</label>
+    <br><br>
+
+
+    <label for="receiverPersonName">Receiver Person Name:</label>
+    <select id="receiverPersonName" name="receiverPersonName" required>
+      <option value="">Select Receiver Person</option>
+      <option value="Michael Brown">Michael Brown</option>
+      <option value="Emily Davis">Emily Davis</option>
+      <option value="Chris Wilson">Chris Wilson</option>
+
+    </select><br><br>
+
+    <label for="destinationSite">Destination Site:</label>
+    <select id="destinationSite" name="destinationSite" required>
+      <option value="">Select Destination Site</option>
+      <option value="Site A">Site A</option>
+      <option value="Site B">Site B</option>
+      <option value="Site C">Site C</option>
+
+    </select><br><br>
+
+  <table id="mainTable">
+    <th>Serial No</th>
+      <th>Product Name</th>
+      <th>Product Make</th>
+      <th>Model No</th> 
+      <th>Product Serial</th>
+      <th>Condition</th>
+      <th>Check Boxes</th>
+      <th>Remarks</th>
+
+
+  <input type="button" value="Submit" id="submitButton">
+
+</form>
+
+
+
+</body>
+</html>

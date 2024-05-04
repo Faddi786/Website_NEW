@@ -1,0 +1,13 @@
+want a python program to go in each folder from the root folder, there are images inside them, image names are like this 
+
+CK-FO5570J-1 BUBBLE
+
+so what i want is that it should simply replace the hyphens with underscores like this 
+
+CK_FO5570J_1 BUBBLE
+
+also check before renaming whether the images have an hyphen or not, if no, then manually after the first 2 letters add one underscore and after the 7 letter add one underscore so it again becomes the same 
+
+CK_FO5570J_1 BUBBLE
+
+if ther +

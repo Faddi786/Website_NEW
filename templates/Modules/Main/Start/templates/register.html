@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Management</title>
+<style>
+    /* Basic CSS for layout */
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+    form {
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+    label {
+        display: inline-block;
+        margin-bottom: 10px;
+    }
+    .tooltip {
+        display: inline-block;
+        vertical-align: middle;
+        position: relative;
+    }
+    input[type="text"], input[type="password"], select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+    }
+    input[type="submit"] {
+        background-color: #4CAF50;
+        color: white;
+        padding: 15px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    input[type="submit"]:hover {
+        background-color: #45a049;
+    }
+    h2 {
+        text-align: center;
+        margin-top: 50px;
+    }
+
+    /* Tooltip CSS */
+    .tooltiptext {
+        visibility: hidden;
+        width: 200px;
+        background-color: #555;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px;
+        position: absolute;
+        z-index: 1;
+        top: -2px; /* Adjust the distance above the icon */
+        right: -350px;
+        transform: translateX(-50%);
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .tooltip:hover .tooltiptext {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    .tooltip .tooltip-icon {
+        font-style: italic;
+        color: rgb(0, 140, 255);
+        cursor: pointer;
+        border: 2px solid rgb(0, 140, 255); /* Add blue outline */
+        border-radius: 50%;
+        padding: 2px 5px; /* Adjust padding */
+        margin-left: 10px; /* Adjust the position of the icon */
+    }
+</style>
+</head>
+<body>        
+    <h2>Register page</h2>
+    <form method="POST" action="/register-data">
+
+<!-- Tooltip for Type Of Account -->
+<div class="tooltip">
+    <label for="account">Type Of Account</label>
+
+</div>
+
+
+
+        <select id="accounttype" name="accounttype">
+            <option value="Manager">Manager</option>
+            <option value="Employee">Employee</option>
+            <!-- Add more managers as needed -->
+        </select>
+
+        <div class="tooltip">
+            <label for="manager">Choose your manager</label>
+
+        </div>
+
+
+
+        <select id="manager" name="manager">
+            <option value="manager1">Manager 1</option>
+            <option value="manager2">Manager 2</option>
+            <option value="manager3">Manager 3</option>
+            <option value="manager4">Manager 4</option>
+            <!-- Add more managers as needed -->
+        </select>
+
+        <!-- Tooltip for Name -->
+        <div class="tooltip">
+            <label for="name">Name:</label>
+
+
+        </div>
+
+
+        <input type="text" id="name" name="name" required>
+
+        <!-- Tooltip for ID -->
+        <div class="tooltip">
+            <label for="id">ID:</label>
+
+        </div>
+
+
+        <input type="text" id="id" name="id" required>
+
+        <!-- Tooltip for Password -->
+        <div class="tooltip">
+            <label for="password">Password:</label>
+
+        </div>  
+
+
+        <input type="password" id="password" name="password" required>
+
+        <!-- Tooltip for Phone Number -->
+        <div class="tooltip">
+            <label for="phone">Phone Number:</label>
+
+        </div>
+
+
+
+        <input type="text" id="phone" name="phone" required>
+
+        <!-- Tooltip for Address -->
+        <div class="tooltip">
+            <label for="address">Address:</label>
+
+        </div>
+
+
+
+        <input type="text" id="address" name="address" required>
+
+        <!-- Tooltip for Office -->
+        <div class="tooltip">
+            <label for="office">Office:</label>
+
+        </div>
+
+
+        <select id="office" name="office">
+            <option value="Gujarat">Gujarat</option>
+            <option value="Delhi">Delhi</option>
+            <option value="Gurgaon">Gurgaon</option>
+            <option value="Chinchpokli">Chinchpokli</option>
+            <option value="Dahisar">Dahisar</option>
+            <option value="Powai">Powai</option>
+            <option value="Rajasthan">Rajasthan</option>
+            <!-- Add more offices as needed -->
+        </select>
+        
+        <input type="submit" value="Create Account">
+
+    </form>
+    <script>
+                document.getElementById('set_privilege').addEventListener('click', function() {
+            // Make an AJAX request to the Flask route
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/set_privilege', true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        // On success, reload the page with the register.html content
+                        document.open();
+                        document.write(xhr.responseText);
+                        document.close();
+                    } else {
+                        // Handle error
+                        console.error('Error occurred while loading register page.');
+                    }
+                }
+            };
+            xhr.send();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+include current project in personal inventory
+delet button on handover form
+success message on each form
+email should include the link to the next stage form itself
+add more information in body
+add more case
+list of items in mail
+aprovals managers name
+same person can transfer to himself
+reached or not
+FROM DROP DOWN VALUES FORM PROJECT FROM PERSON
+also check that the user should select atleast one item before pressing the send item button on the handover form
+add code that form should not proceed if previous stage not approved or done
+transfer the code to sql
+add images option
+
+
+
+one click multiple items selected
+three tabs
+rigorous testing
+Consider using a library like jQuery to simplify DOM manipulation tasks.

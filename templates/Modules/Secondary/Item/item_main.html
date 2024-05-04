@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Link with URL for 'my_reci'</title>
+<style>
+  .custom-link {
+    display: inline-block;
+    width: 100px; /* Adjust width as needed */
+    height: 40px; /* Adjust height as needed */
+    background-color: #007bff; /* Blue color, you can change it */
+    color: white;
+    text-decoration: none; /* Remove default underline */
+    line-height: 40px; /* Center text vertically */
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 4px; /* Add some rounded corners */
+    box-sizing: border-box; /* Include padding and border in the width */
+  }
+
+  .custom-link:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+  }
+</style>
+</head>
+<body>
+
+<a href="{{ url_for('add_item') }}" class="custom-link">Add Item</a>
+<a href="{{ url_for('delete_item') }}" class="custom-link">Delete Item</a>
+
+</body>
+</html>

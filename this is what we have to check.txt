@@ -1,0 +1,108 @@
+
+
+
+\1. Flight Plan\FP_LOT04_210
+-> shape file
+
+\1. Flight Plan\PP_LOT04_210
+-> shape file
+
+
+\1. Flight Plan\Raw Data
+-> isempty
+
+\1. Flight Plan\Raw Data\POS Report - > do this for each date folder and flight folder
+
+{
+\1. Flight Plan\Raw Data\POS Report\2023.06.07\F1
+-> is empty
+}
+\
+\1. Flight Plan\Reports\Baseline Processing Report\2023.06.07, 2023.06.08
+-> is empty
+
+\1. Flight Plan\Reports\Network Adjustmnet Report\2023.06.07, 2023.06.08
+-> is empty
+
+\1. Flight Plan
+-> check excel
+
+\1. Flight Plan\Raw Data
+-> atleast two folder, should be there, one for pos report, another should indicate folder for images
+
+\1. Flight Plan\Raw Data\2023.06.07\F1
+-> go in each flight folder and check is empty
+
+\2. Ground Control Point\Field Images\2023.06.21
+-> come here and check in each folder, each folder should contain atleast one image, it should not be empty
+
+\2. Ground Control Point\GPS Data\RawData-Rinex\2023.06.21\1. CORS Data
+-> compulsory three folders
+
+\2. Ground Control Point\GPS Data\RawData-Rinex\2023.06.21\1. CORS Data\CNGR
+->is empty
+
+\2. Ground Control Point\GPS Data\RawData-Rinex\2023.06.21\2. Reference Base Station\RB_FO2035S_1
+->is empty
+
+\2. Ground Control Point\GPS Data\RawData-Rinex\2023.06.21\3. Control Point
+->is empty
+
+\2. Ground Control Point\GPS Data\RawData-Rinex\2023.06.21\3. Control Point\CP_FO2530H_1
+->is empty
+
+\2. Ground Control Point\GPS Data\RawData-Rinex\2023.06.21\5. Check Point
+-> is empty(dont consider number, just take name)
+
+\2. Ground Control Point\GPS Processing Report\2023.06.21
+->is empty (for all three folders)
+
+\2. Ground Control Point
+-> excel compulsory
+
+\3. Block files\BK_LOT04_210\1K Grid
+-> atleast 1 shapefile
+
+\3. Block files\BK_LOT04_210\5K Grid
+-> atleast 1 shapefile
+
+\3. Block files\GPS_BK_LOT04_210
+-> atleast 1 shapefile
+
+\3. Block files\SL_BK_LOT04_210
+-> atleast 1 shapefile
+
+\3. Block files
+-> one pdf
+
+\4. DSM-ORI\1. DSM\COG\FO
+->is empty
+
+\4. DSM-ORI\1. DSM\Geotiff\FO
+->is empty
+
+\4. DSM-ORI\2. Orthomosaic\COG\FO
+-> less than 300 mb
+
+\4. DSM-ORI\2. Orthomosaic
+->
+match file names in geotiff and cog, also goetiff should eb greater in size and cog should be less
+
+
+\4. DSM-ORI\1. DSM
+
+-> check in both folders here, count should be equal
+
+\1. Flight Plan\Base Station Raw Rinex Data -> go in each date folder and flight folder check the following in each flight fodler
+
+{	\2023.06.07\F1\Drone Base\DB_FO2535C_1
+
+-> is empty 
+
+
+\2023.06.07\F1\PPK Rover
+
+-> bin or ubx, either should be present
+
+}
+

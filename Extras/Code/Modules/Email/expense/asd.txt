@@ -1,0 +1,1 @@
+python sendm.py shaikhfahad687@gmail.com babushona786 shaikhfahad687@gmail.com "Test Email" "Hello, this is a test email."

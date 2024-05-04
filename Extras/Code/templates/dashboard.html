@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Drone Equipment Table</title>
+<style>
+    table {
+        border-collapse: collapse;
+    }
+    th, td {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
+</head>
+<body>
+
+<h2>Dashboard</h2>
+
+<table id="eq_dynamicTable">
+  <thead>
+    <tr>
+        <th>Sr. No</th>  
+        <th>Item Description</th>
+        <th>Make</th>
+        <th>Model</th>
+        <th>Serial Number</th>
+        <th>Remarks</th>
+        <th>Condition</th>
+        <th>Current Owner</th>
+        <th>Previous Owner</th>
+        <th>Current Project</th>
+        <th>Previous Project</th>
+        <th>Last Handover By</th>  
+        <th>Handover Date</th>
+        <th>Handover Location</th>
+
+    </tr>
+  </thead>
+  <tbody id="eq_tableBody">
+    <!-- Rows will be dynamically added here -->
+  </tbody>
+</table>
+<button id="eq_saveButton">Save</button>
+<button id="eq_addButton">addrow</button>
+<button id = "eq_edit-button" class="eq-edit-button">edit</button>
+
+<script>
+let eq_numRows = 0;
+window.onload = function() {
+    // Recieving data to Flask server using a GET request
+    var eq_xhr = new XMLHttpRequest();
+    eq_xhr.open("GET", "http://127.0.0.1:5000/receive_data", true);
+
+    eq_xhr.onreadystatechange = function() {
+        if (eq_xhr.readyState === XMLHttpRequest.DONE) {
+            if (eq_xhr.status === 200) {
+                var eq_data = JSON.parse(eq_xhr.responseText);
+                eq_populateFields(eq_data);
+            } else {
+                console.error('Error:', eq_xhr.status);
+            }
+        }
+    };
+
+    eq_xhr.send();
+};
+
+function eq_populateFields(data) {
+  var eq_numRows = data.length;
+  eq_createRows(eq_numRows);
+
+  for (var i = 0; i < eq_numRows; i++) {
+    document.getElementById(`eq_srNo${i}`).value = data[i][0]; // Sr No
+    document.getElementById(`eq_itemDescription${i}`).value = data[i][1]; // Item Description
+    document.getElementById(`eq_make${i}`).value = data[i][2]; // Make
+    document.getElementById(`eq_model${i}`).value = data[i][3]; // Model (assuming this wasn't included before)
+    document.getElementById(`eq_serialNumber${i}`).value = data[i][4]; // Serial Number
+    document.getElementById(`eq_remarks${i}`).value = data[i][5]; // Remarks
+    document.getElementById(`eq_condition${i}`).value = data[i][6]; // Condition
+    document.getElementById(`eq_currentOwner${i}`).value = data[i][7]; // Current Owner
+    document.getElementById(`eq_previousOwner${i}`).value = data[i][8]; // Previous Owner
+    document.getElementById(`eq_currentProject${i}`).value = data[i][9]; // Current Project
+    document.getElementById(`eq_previousProject${i}`).value = data[i][10]; // Previous Project
+    document.getElementById(`eq_lastHandoverBy${i}`).value = data[i][11]; // Last handover authorized by
+    document.getElementById(`eq_handoverDate${i}`).value = data[i][12]; // Handover date
+    document.getElementById(`eq_handoverLocation${i}`).value = data[i][13]; // Handover location
+    // Image columns likely require additional logic for handling images
+  }
+}
+
+function eq_createRows(numRows) {
+  var tableBody = document.getElementById("eq_tableBody");
+  for (var i = 0; i < numRows; i++) {
+    var row = document.createElement("tr");
+    row.innerHTML = `
+      <td><input type="text" id="eq_srNo${i}" value=""></td>
+      <td><input type="text" id="eq_itemDescription${i}" value=""></td>
+      <td><input type="text" id="eq_make${i}" value=""></td>
+      <td><input type="text" id="eq_model${i}" value=""></td> <td><input type="text" id="eq_serialNumber${i}" value=""></td>
+      <td><input type="text" id="eq_remarks${i}" value=""></td>
+      <td><input type="text" id="eq_condition${i}" value=""></td>
+      <td><input type="text" id="eq_currentOwner${i}" value=""></td>
+      <td><input type="text" id="eq_previousOwner${i}" value=""></td>
+      <td><input type="text" id="eq_currentProject${i}" value=""></td>
+      <td><input type="text" id="eq_previousProject${i}" value=""></td>
+      <td><input type="text" id="eq_lastHandoverBy${i}" value=""></td>
+      <td><input type="text" id="eq_handoverDate${i}" value=""></td>
+      <td><input type="text" id="eq_handoverLocation${i}" value=""></td>
+      <td><button class="eq_delete-button" disabled>Delete</button></td>
+    `;
+    tableBody.appendChild(row);
+  }
+
+
+    // Add event listeners to edit buttons in the newly created rows
+    var editButtons = document.querySelectorAll('.eq_edit-button');
+    editButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            var deleteButtons = document.querySelectorAll('.eq_delete-button');
+            deleteButtons.forEach(function(deleteButton) {
+                deleteButton.disabled = false;
+            });
+        });
+    });
+
+    // Add event listeners to delete buttons in the newly created rows
+    var deleteButtons = document.querySelectorAll('.eq_delete-button');
+    deleteButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            // Get the parent row and remove it
+            var row = this.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+        });
+    });
+}
+
+// Call the function with the number of rows you want to create
+eq_createRows(eq_numRows); // Change this number as needed
+
+document.getElementById("eq_addButton").addEventListener("click", function() {
+    eq_createRows(1); // Call the createRows function with 1 as the argument
+});
+
+document.getElementById("eq_saveButton").addEventListener("click", function() {
+    var tableRows = document.querySelectorAll("#eq_dynamicTable tbody tr");
+    var data = [];
+    tableRows.forEach(function(row) {
+        var rowData = {};
+        var inputs = row.querySelectorAll("input[type='text']");
+        inputs.forEach(function(input, index) {
+            var columnName = document.querySelectorAll("#eq_dynamicTable thead th")[index].textContent;
+            rowData[columnName] = input.value;
+        });
+        data.push(rowData);
+    });
+
+    // Sending data to Flask server
+    var eq_xhr = new XMLHttpRequest();
+    eq_xhr.open("POST", "http://127.0.0.1:5000/send_data", true);
+    eq_xhr.setRequestHeader("Content-Type", "application/json");
+    eq_xhr.onreadystatechange = function() {
+        if (eq_xhr.readyState === XMLHttpRequest.DONE) {
+            if (eq_xhr.status === 200) {
+                console.log('Data sent successfully:', eq_xhr.responseText);
+            } else {
+                console.error('Error:', eq_xhr.status);
+            }
+        }
+    };
+    eq_xhr.send(JSON.stringify(data));
+});
+
+
+</script>
+
+</body>
+</html>

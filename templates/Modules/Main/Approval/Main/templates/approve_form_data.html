@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Approval Form</title>
+<style>
+  table {
+    border-collapse: collapse;
+    font-size: 10px !important;
+  }
+  th, td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
+    font-size: 10px !important;
+  }
+  th {
+    font-size: 10px !important;
+    background-color: lightgray;
+  }
+</style>
+</head>
+<body>
+
+<h2>Approval Form</h2>
+<div id="table-container">
+  <!-- The HTML table will be displayed here -->
+</div>
+<form id="handoverForm" enctype="multipart/form-data">
+
+
+    
+    <label id="originSiteLabel">Origin of Site:</label>
+    <label id="originSite">Loading Origin of Site...</label><br><br>
+  
+    <label id="destinationSiteLabel">Destination Site:</label>
+    <label id="destinationSite"> Loading Destination Site...</label><br><br>
+  
+    <label id="handoverPersonNameLabel">Handover Person Name:</label>
+    <label id="handoverPersonName">Loading Handover Person Name...</label><br><br>
+  
+    <label id="receiverPersonNameLabel">Receiver Person Name:</label>
+    <label id="receiverPersonName"> Loading Receiver Person Name...</label><br><br>
+
+
+
+    <table id="mainTable">
+        <th>Serial No</th>
+        <th>Category</th>
+        <th>Product Name</th>
+        <th>Product Make</th>
+        <th>Model No</th>
+        <th>Product ID</th>
+        <th>Condition</th>
+        <th>Status (Sender)</th>
+        <th>Remarks(Sender)</th>
+        <th>Status (Reciever)</th>
+        <th>Remarks (Reciever)</th>
+      </table><br>
+
+
+<button type="button" onclick="askForApproval()">Accept Approval</button>
+<!--<button type="button" onclick="updateowner()">Update Owner</button>-->
+
+<h4>Press the button to Accept items</h4> 
+</form>
+<script>
+  var data="";
+  window.onload = function() {
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", "/approve_get_form_data", true);
+      xhr.onreadystatechange = function() {
+          if (xhr.readyState == 4 && xhr.status == 200) {
+              data = JSON.parse(xhr.responseText);
+              var table = document.getElementById("mainTable");
+              data.forEach(function(row) {
+                    var newRow = table.insertRow();
+
+                    var serialNoCell = newRow.insertCell(0);
+                    serialNoCell.textContent = row['Serial No'];
+
+                    var productCategoryCell = newRow.insertCell(1);
+                    productCategoryCell.textContent = row['Category'];
+
+                    var productNameCell = newRow.insertCell(2);
+                    productNameCell.textContent = row['Name'];
+
+                    var productNameCell = newRow.insertCell(3);
+                    productNameCell.textContent = row['Make'];
+
+                    var ModelCell = newRow.insertCell(4);
+                    ModelCell.textContent = row['Model'];
+
+                    var ProductNoCell = newRow.insertCell(5);
+                    ProductNoCell.textContent = row['ProductID'];
+
+                    var conditionCell = newRow.insertCell(6);
+                    conditionCell.textContent = row['Condition'];
+
+
+
+                    var checkboxCellDisabled = newRow.insertCell(7);
+                    checkboxCellDisabled.innerHTML = `
+                        <input type="checkbox" name="frontend" ${row['frontend'] ? 'checked' : ''} disabled> Frontend
+                        <input type="checkbox" name="backend" ${row['backend'] ? 'checked' : ''} disabled> Backend
+                        <input type="checkbox" name="cleanup" ${row['cleanup'] ? 'checked' : ''} disabled> Cleanup
+                    `;
+
+                    var remarksCell = newRow.insertCell(8);
+                    remarksCell.textContent = row['SenderRemarks'];
+
+                    var checkboxCellEnabled = newRow.insertCell(9);
+                    checkboxCellEnabled.innerHTML = `
+                        <input type="checkbox" name="ReceiverReached" disabled> Reached
+                        <input type="checkbox" name="ReceiverFrontend"disabled> Frontend
+                        <input type="checkbox" name="ReceiverBackend"disabled> Backend
+                        <input type="checkbox" name="ReceiverCleanup"disabled> Cleanup
+                    `;
+
+                    var receiverRemarks = newRow.insertCell(10);
+                    receiverRemarks.textContent = row['ReceiverRemarks'];
+
+                });
+           }
+        };
+      xhr.send();
+  };
+
+  function askForApproval() {
+    // Update UI to show that the request has been sent
+    var h4Element = document.querySelector("h4");
+    h4Element.innerHTML = "Items have been accepted";
+        console.log(data)
+    // Create a new XMLHttpRequest object
+    var xhr = new XMLHttpRequest();
+    
+    // Configure the request: POST method and URL
+    xhr.open("POST", "/accept_items", true);
+
+    // Set the Content-Type header to indicate JSON data
+    xhr.setRequestHeader("Content-Type", "application/json");
+
+    // Define the function to handle the response
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4) { // Request is complete
+            if (xhr.status == 200) { // Status code is OK
+                console.log("Approval request sent successfully.");
+                // You can add further actions here if needed
+            } else {
+                console.error("Error sending approval request. Status code:", xhr.status);
+            }
+        }
+    };
+
+    // Send the request with JSON data
+    xhr.send(JSON.stringify(data));
+}
+
+function updateowner() {
+    var xhr = new XMLHttpRequest();
+    
+    // Configure the request: POST method and URL
+    xhr.open("POST", "/update_owner", true);
+
+    // Set the Content-Type header to indicate JSON data
+    xhr.setRequestHeader("Content-Type", "application/json");
+
+    // Define the function to handle the response
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4) { // Request is complete
+            if (xhr.status == 200) { // Status code is OK
+                console.log("Approval request sent successfully.");
+                // You can add further actions here if needed
+            } else {
+                console.error("Error sending approval request. Status code:", xhr.status);
+            }
+        }
+    };
+
+    // Send the request with JSON data
+    xhr.send(JSON.stringify(data));
+}
+
+</script>
+</body>
+</html>

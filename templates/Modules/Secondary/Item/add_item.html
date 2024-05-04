@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Item Details</title>
+</head>
+<body>
+    <h2>Add Item Details</h2>
+    <form id="itemForm">
+        <div>
+            <label for="item_description">Item Description:</label>
+            <input type="text" id="item_description" name="item_description">
+        </div>
+        <div>
+            <label for="make">Make:</label>
+            <input type="text" id="make" name="make">
+        </div>
+        <div>
+            <label for="model">Model:</label>
+            <input type="text" id="model" name="model">
+        </div>
+        <div>
+            <label for="serial_number">Serial Number:</label>
+            <input type="text" id="serial_number" name="serial_number">
+        </div>
+        <button type="button" onclick="sendData()">Add Item</button>
+    </form>
+
+    <script>
+        function sendData() {
+            var formData = new FormData(document.getElementById("itemForm"));
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/add_item_", true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    console.log(xhr.responseText);
+                    // Optionally, do something with the response
+                }
+            };
+            xhr.send(formData);
+        }
+    </script>
+</body>
+</html>

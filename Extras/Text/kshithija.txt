@@ -1,0 +1,18 @@
+I have talked to pradip sir about the programs and told him to give me a detailed report of all the programs u want.
+
+Things required to mention in the report :
+
+Program name
+Problem Statement(what is the purpose, what problem are you facing, why it is needed, what problem it is supposed to solve)
+Overview(what u guys want it to do)
+Output(what should be the output, list everything u guys would like to know or want the program to accomplish)
+folder structure 
+file locaton
+file name
+value to check
+
+(Note : Make another column to specify all the cases the program has to keep in mind, like change of folder structure, location, values, names, so it wont be strictly doing one thing, and i will make it dynamic enough to handle unknown and variable cases too)
+
+give me the programs list as what is needed, and what could be needed. so i could make everything u guys need right now or would require in future cuz im putting the website development on hold and specifically dedicating time for your programs, maybe in future once the website go online i wont be able to do so cuz i will be super busy with it 
+
+It will be helful if i receive the report as soon as possible 

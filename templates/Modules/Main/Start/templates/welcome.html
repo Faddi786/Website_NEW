@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome User</title>
+</head>
+<body>
+    <h1 id="welcome-heading">Welcome <span id="username">user</span></h1>
+    <script>
+        // Function to make XHR request
+        function getUsername() {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/get_username', true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        var response = JSON.parse(xhr.responseText);
+                        document.getElementById('username').innerText = response.username;
+                    } else {
+                        console.error('Request failed with status:', xhr.status);
+                    }
+                }
+            };
+            xhr.send();
+        }
+
+        // Call the function to get the username
+        getUsername();
+    </script>
+</body>
+</html>

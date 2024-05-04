@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excel Data</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Data from Excel</h1>
+    <!-- Display the HTML table here -->
+    <table id="editable-table">
+        {{ table|safe }}
+    </table>
+
+    <button id="save-btn">Save</button>
+
+    <script>
+        $(document).ready(function() {
+            // Convert table cells to dropdowns for editing (excluding specified columns)
+            $('table tr:first-child td').each(function(index) {
+                if ([0,  5,14, 15, 16, 17, 18].indexOf(index) === -1) { // Check if the column index is not in the exclusion list
+                    var columnValues = [];
+                    // Get all values from this column
+                    $('table tr td:nth-child(' + (index + 1) + ')').each(function() {
+                        var value = $(this).text().trim();
+                        if (value !== '' && columnValues.indexOf(value) === -1) {
+                            columnValues.push(value);
+                        }
+                    });
+                    // Create dropdown with original cell value as default
+                    var dropdown = '<select>';
+                    for (var i = 0; i < columnValues.length; i++) {
+                        dropdown += '<option value="' + columnValues[i] + '">' + columnValues[i] + '</option>';
+                    }
+                    dropdown += '</select>';
+                    // Replace each cell in this column with the dropdown
+                    $('table tr td:nth-child(' + (index + 1) + ')').each(function() {
+                        var originalValue = $(this).text().trim();
+                        $(this).html(dropdown).find('select').val(originalValue);
+                    });
+                }
+            });
+    
+            // Event listener for delete buttons
+            $('.delete-btn').click(function() {
+                // Find the parent row and remove it
+                $(this).closest('tr').remove();
+            });
+// Modify the JavaScript code to send table data in the correct structure
+document.getElementById('save-btn').addEventListener('click', function(event) {
+    if (event.target.id === 'save-btn') {
+        // Collect table data
+        var tableData = [];
+        // Get column headers
+        var headers = [];
+        document.querySelectorAll('table tr:first-child th').forEach(function(cell) {
+            headers.push(cell.textContent.trim());
+        });
+        tableData.push(headers);
+        // Get row data
+        document.querySelectorAll('table tr').forEach(function(row, rowIndex) {
+            if (rowIndex !== 0) { // Exclude header row
+                var rowData = [];
+                row.querySelectorAll('td').forEach(function(cell) {
+                    // Check if the cell contains a dropdown
+                    var dropdown = cell.querySelector('select');
+                    if (dropdown) {
+                        // Get the selected value from the dropdown
+                        rowData.push(dropdown.value);
+                    } else {
+                        // Get the text content of the cell
+                        rowData.push(cell.textContent.trim());
+                    }
+                });
+                tableData.push(rowData);
+            }
+        });
+        // Print the table data to the console
+        console.log('Table Data:');
+        console.log(tableData);
+        // Send data to Flask route
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/save_table', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    // Handle success response
+                    console.log(xhr.responseText);
+                } else {
+                    // Handle error
+                    console.error('Failed to save table: ' + xhr.statusText);
+                }
+            }
+        };
+        xhr.send(JSON.stringify({ table: tableData }));
+    }
+});
+
+
+
+
+    
+        });
+    </script>
+    
+</body>
+</html>

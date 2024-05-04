@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Excel Data Display</title>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+<style>
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  th, td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+  }
+  th {
+    background-color: #f2f2f2;
+  }
+</style>
+</head>
+<body>
+
+<table id="data-table">
+  <thead>
+    <tr id="header-row">
+      <!-- Column headers will be added here dynamically -->
+    </tr>
+  </thead>
+  <tbody>
+    <!-- Data rows will be added here -->
+  </tbody>
+</table>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script>
+  // Function to fetch data from Flask route using XMLHttpRequest
+  function fetchData() {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/invent_dashboard', true);
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === XMLHttpRequest.DONE) {
+        if (xhr.status === 200) {
+          var data = JSON.parse(xhr.responseText);
+          displayData(data);
+        } else {
+          console.error('Error fetching data:', xhr.statusText);
+        }
+      }
+    };
+    xhr.send();
+  }
+
+  // Function to display data in the table
+  function displayData(data) {
+    const tableHeader = document.querySelector('#header-row');
+    const tableBody = document.querySelector('#data-table tbody');
+
+    tableHeader.innerHTML = ''; // Clear existing header
+    tableBody.innerHTML = ''; // Clear existing data
+
+    // Define the desired column sequence
+    const desiredColumns = ['Serial No', 'Category', 'ProductID', 'Name', 'Make', 'Model', 'Condition', 'CurrentProject', 'CurrentOwner'];
+
+    // Create table headers based on the desired sequence
+    desiredColumns.forEach(column => {
+      const th = document.createElement('th');
+      th.textContent = column;
+      tableHeader.appendChild(th);
+    });
+
+    // Populate table with data
+    data.forEach(row => {
+      const tr = document.createElement('tr');
+      desiredColumns.forEach(column => {
+        const td = document.createElement('td');
+        td.textContent = row[column] || ''; // If data for the column is not available, display an empty string
+        tr.appendChild(td);
+      });
+      tableBody.appendChild(tr);
+    });
+
+    // Initialize DataTables
+    $('#data-table').DataTable();
+  }
+
+  // Call the fetchData function when the page loads
+  window.onload = fetchData;
+</script>
+
+</body>
+</html>

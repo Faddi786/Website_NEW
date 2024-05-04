@@ -1,0 +1,705 @@
+remove the code for items already initited and your inventory
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Curved Rectangle</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    background-color: #f0f0f0;
+  }
+
+  .curved-rectangle {
+    position: relative;
+    width: 1000px;
+    height: 450px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+    background-color: #fff;
+    border-radius: 30px 30px 30px 30px;
+    border: 2px solid #000;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .tabs {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 2px solid #000;
+  }
+
+  .tab {
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+
+  .tab-content {
+    display: none;
+    padding: 20px;
+  }
+
+  .tab-content.active {
+    display: block;
+  }
+
+  table {
+    border-collapse: collapse;
+    font-size: 10px !important;
+  }
+
+  th, td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
+    font-size: 10px !important;
+  }
+
+  th {
+    font-size: 10px !important;
+    background-color: lightgray;
+  }
+  
+  .form-footer {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+  }
+
+  .form-footer h4 {
+    margin: 0;
+  }
+</style>
+
+<h2 style="margin-left: 600px;margin-top: 20px;">Handover Form</h2>
+
+<form id="handoverForm">
+
+  <label style="margin-left: 160px;">From Person:</label>
+  <label id="FromPerson" style="margin-right: 50px;">Loading From Person Name ....</label>
+
+  <label for="FromProject">From Project:</label>
+  <select id="FromProject" name="FromProject" style="margin-right: 50px;" required>
+    <option value="">Select Project</option>
+    <option value="SOI Tripura">SOI Tripura</option>
+    <option value="SOI ASSAM">SOI ASSAM</option>
+    <option value="SOI HP">SOI HP</option>
+  </select>
+
+  <label for="ToPerson">To Person:</label>
+  <select id="ToPerson" name="ToPerson" style="margin-right: 50px;" required>
+    <option value="">Select Person</option>
+    <option value="Fahad">Fahad</option>
+    <option value="Umar">Umar</option>
+    <option value="Zafar">Zafar</option>
+  </select>
+
+  <label for="ToProject">To Project:</label>
+  <select id="ToProject" name="ToProject" style="margin-right: 50px;" required>
+    <option value="">Select Project</option>
+    <option value="SOI Tripura">SOI Tripura</option>
+    <option value="SOI ASSAM">SOI ASSAM</option>
+    <option value="SOI HP">SOI HP</option>
+  </select>
+
+
+
+  <div class="curved-rectangle">
+    <div class="tabs">
+      <div class="tab" onclick="showItemsSelectedTab()">Items you have selected</div>
+      <div class="tab" onclick="showSelectTab()">Items You Can Select</div>
+      <div class="tab" onclick="showInitiatedTab()">Items Already Initiated</div>
+      <div class="tab" onclick="showInventoryTab()">Your Inventory</div>
+    </div>
+
+    <div class="tab-content" id="itemsSelected">
+      <div class="form-footer">
+        <h4 id = "statusMessage"style="margin-left: 730px; margin-right: 5px; font-weight: normal;">Press this button to initiate the item transfer process</h4>
+        <input style= "margin-left: 5px" type="button" value="Transfer Items" id="submitButton">
+      </div>
+      <!-- Content for Items You Have Selected Tab -->
+      <h4>No item selected</h4>
+  </div>
+  
+
+    <div class="tab-content" id="selectableTab">
+      <!-- Content for Items You Can Select Tab -->
+      <table></table>
+    </div>
+
+    <div class="tab-content" id="initiatedTab">
+      <!-- Content for Items Already Initiated Tab -->
+      Items Already Initiated
+    </div>
+
+    <div class="tab-content" id="inventoryTab">
+      <!-- Content for Your Inventory Tab -->
+      Your Inventory
+    </div>
+  </div>
+</form>
+
+
+
+
+  <script>
+    
+    // Add event listeners to select elements to check for default option
+    var selectElements = document.querySelectorAll('select[required]');
+    selectElements.forEach(function(selectElement) {
+        selectElement.addEventListener('change', function() {
+            if (selectElement.value !== "") {
+                // Enable the submit button when all required fields are selected
+                submitButton.disabled = false;
+            } else {
+                // Disable the submit button if any required field is not selected
+                submitButton.disabled = true;
+            }
+        });
+    });
+
+    function showItemsSelectedTab() {
+    clearTabs(); // Clear all tabs to ensure only the selected one is active
+    var itemsSelectedTab = document.getElementById('itemsSelected'); // Get the 'Items You Have Selected' tab
+    itemsSelectedTab.classList.add('active'); // Add the 'active' class to make it visible
+
+    // Here you may add any additional logic to display selected items in the tab if needed
+}
+
+
+
+document.getElementById("submitButton").addEventListener("click", function(event) {
+    var selectElements = document.querySelectorAll('select[required]');
+    var errorMessage = "";
+
+    // Check if any required select element is empty
+    selectElements.forEach(function(selectElement) {
+        if (selectElement.value === "") {
+            errorMessage = "Please select a value for all required fields.";
+        }
+    });
+
+    // If there is any error, prevent form submission and show the error message
+    if (errorMessage !== "") {
+        event.preventDefault(); // Prevent form submission
+        alert(errorMessage); // Show the error message
+    } else {
+        // Check if From Person and To Person, and From Project and To Project are the same
+        var fromPerson = document.getElementById("FromPerson").textContent.trim();
+        var toPerson = document.getElementById("ToPerson").value;
+        var fromProject = document.getElementById("FromProject").value;
+        var toProject = document.getElementById("ToProject").value;
+        
+        if (fromPerson === toPerson && fromProject === toProject) {
+            errorMessage = "From Person and To Person, and From Project and To Project should not be the same.";
+        }
+
+        // If there is any error, prevent form submission and show the error message
+        if (errorMessage !== "") {
+            event.preventDefault(); // Prevent form submission
+            alert(errorMessage); // Show the error message
+        } else {
+
+
+            // If there is any error, prevent form submission and show the error message
+            if (errorMessage !== "") {
+                event.preventDefault(); // Prevent form submission
+                alert(errorMessage); // Show the error message
+            } else {
+                // If all validations pass, change the message and disable the button
+                document.getElementById("statusMessage").textContent = "The transfer initiation has begun, please wait for success message";
+                document.getElementById("submitButton").disabled = true;
+                logRowValues();
+            }
+        }
+    }
+});
+
+
+
+
+
+
+
+function logRowValues() {
+  var formObject = []; // Initialize formObject as an array
+
+// Object to store values from other form elements
+var otherFormValues = {
+    FromProject: document.getElementById("FromProject").value,
+    ToProject: document.getElementById("ToProject").value,
+    FromPerson: document.getElementById("FromPerson").textContent.trim(),
+    ToPerson: document.getElementById("ToPerson").value,
+};
+formObject.push(otherFormValues); // Append otherFormValues to formObject array
+
+// Find the table within the 'Items You Have Selected' tab
+var selectedTab = document.getElementById('itemsSelected');
+var selectedTable = selectedTab.querySelector('maintable');
+
+if (selectedTable) {
+    // Loop through table rows and collect data
+    var tbody = selectedTable.querySelector('tbody');
+    var rows = tbody.querySelectorAll('tr');
+    rows.forEach(function(row, index) {
+        // Skip the header row
+        if (index !== 0) {
+            var cells = row.querySelectorAll('td');
+            var rowData = {
+                Category: cells[1].innerText,
+                ProductID: cells[5].innerText,
+                Name: cells[2].innerText,
+                Make: cells[3].innerText,
+                Model: cells[4].innerText,
+                SenderCondition: cells[6].querySelector('select').value,
+                SenderRemarks: cells[7].querySelector('input[type="text"]').value
+            };
+            formObject.push(rowData); // Append rowData to formObject array
+        }
+    });
+}
+
+console.log(formObject); // Check the collected data in formObject
+    
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "send_approval_request", true);
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                var data = JSON.parse(xhr.responseText);
+                // Check if the response indicates success
+                if (data.message === 'Excel file updated successfully') {
+                    // Update the h4 tag with the success message
+                    document.getElementById("statusMessage").textContent = "Handover process has been successfully initiated, the email is sent to your manager successfully";
+                    document.getElementById("statusMessage").style.color = "green";
+                } else {
+                    console.error('Error:', data.message);
+                }
+            } else {
+                console.error('Error:', xhr.status);
+            }
+        }
+    };
+
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(JSON.stringify(formObject));
+}
+
+
+
+function toggleSelectedItemsHeader() {
+  const tab = document.getElementById('itemsSelected');
+  const table = tab.querySelector('table');
+  const header = tab.querySelector('h4');
+
+  if (table && table.querySelector('tbody') && table.querySelector('tbody').children.length > 0) {
+    // If there are selected items, hide the header
+    header.style.display = 'none';
+  } else {
+    // If there are no selected items, show the header
+    header.style.display = 'block';
+  }
+}
+
+
+    let inventoryData;
+    let initiatedData;
+    let selectedItems = []; // Array to store IDs of selected items
+
+    window.onload = function() {
+      fetch('/cart_items')
+        .then(response => response.json())
+        .then(result => {
+          const combinedData = result.combined_data;
+          if (Array.isArray(combinedData) && combinedData.length === 2) {
+            inventoryData = combinedData[0];
+            initiatedData = combinedData[1];
+            displaySelectTable();
+            toggleSelectedItemsHeader();
+
+            
+          } else {
+            console.error('Combined data is not valid:', combinedData);
+          }
+        })
+        .catch(error => console.error('Error fetching data:', error));
+    };
+
+    function showItemsSelectedTab() {
+  clearTabs();
+  document.getElementById('itemsSelected').classList.add('active');
+  // Here you may add logic to display selected items
+}
+
+
+
+
+    function showInventoryTab() {
+      clearTabs();
+      document.getElementById('inventoryTab').classList.add('active');
+      displayInventoryTable();
+    }
+
+    function showInitiatedTab() {
+      clearTabs();
+      document.getElementById('initiatedTab').classList.add('active');
+      displayInitiatedTable();
+    }
+
+    function showSelectTab() {
+      clearTabs();
+      document.getElementById('selectableTab').classList.add('active');
+      displaySelectTable();
+    }
+
+    function clearTabs() {
+      const tabs = document.querySelectorAll('.tab-content');
+      tabs.forEach(tab => {
+        tab.classList.remove('active');
+      });
+    }
+
+    function displayInventoryTable() {
+      const tab = document.getElementById('inventoryTab');
+      const table = createTable(['Serial', 'Category', 'Name', 'Make', 'Model', 'ProductID']);
+      inventoryData.forEach((item, index) => {
+        appendRow(table, index + 1, item);
+      });
+      tab.innerHTML = '';
+      tab.appendChild(table);
+    }
+
+    function displayInitiatedTable() {
+      const tab = document.getElementById('initiatedTab');
+      const table = createTable(['Serial', 'ProductID', 'Name', 'FormID', 'Handover Date']);
+      const tbody = table.querySelector('tbody');
+
+      initiatedData.forEach((item, index) => {
+        const row = document.createElement('tr');
+
+        // Create Serial column
+        const serialCell = document.createElement('td');
+        serialCell.textContent = index + 1;
+        row.appendChild(serialCell);
+
+        // Create cells for remaining data
+        item.forEach((value, columnIndex) => {
+          const cell = document.createElement('td');
+          cell.textContent = value;
+          row.appendChild(cell);
+        });
+
+        // Append the row to the tbody
+        tbody.appendChild(row);
+      });
+
+      // Clear existing content and append the updated table
+      tab.innerHTML = '';
+      tab.appendChild(table);
+    }
+    let selectableData = [];
+
+function calculateSelectableData() {
+  selectableData = [];
+  inventoryData.forEach(inventoryItem => {
+    const isInInitiatedData = initiatedData.some(initiatedItem => initiatedItem[0] === inventoryItem.ProductID);
+    if (!isInInitiatedData) {
+      const itemId = inventoryItem.ProductID;
+      const disabled = isSelected(itemId); // Check if item is selected
+      selectableData.push([inventoryItem.Category, inventoryItem.Name, inventoryItem.Make, inventoryItem.Model, itemId, disabled]);
+    }
+  });
+}
+
+function handleCheckboxChange(checkbox, itemId, itemRow) {
+  if (checkbox.checked) {
+    // If checkbox is checked, add item ID to selectedItems
+    selectedItems.push(itemId);
+    // Append the selected item to the first tab's table
+    appendSelectedItem(itemRow);
+    toggleSelectedItemsHeader();
+
+
+  } else {
+    // If checkbox is unchecked, remove item ID from selectedItems
+    selectedItems = selectedItems.filter(id => id !== itemId);
+    // Remove the selected item from the first tab's table
+    removeSelectedItem(itemId);
+    toggleSelectedItemsHeader();
+
+
+  }
+  // Update selectable data with disabled status
+  updateSelectableData();
+  // Update the first tab's table based on the changes
+  displayItemsSelectedTable();
+  toggleSelectedItemsHeader();
+
+
+
+}
+
+
+function displayItemsSelectedTable() {
+  const tab = document.getElementById('itemsSelected');
+  const table = tab.querySelector('maintable');
+  if (table) {
+    // Clear existing table
+    table.innerHTML = '';
+    // Append header
+    const headerRow = document.createElement('tr');
+    ['Serial No', 'Category', 'Name', 'Make', 'Model', 'ProductID', 'Condition', 'Remark'].forEach(column => {
+      const th = document.createElement('th');
+      th.textContent = column;
+      headerRow.appendChild(th);
+    });
+    table.appendChild(headerRow);
+    // Append selected items
+    selectedItems.forEach(itemId => {
+      const item = selectableData.find(data => data[4] === itemId);
+      if (item) {
+        appendSelectedItem(item);
+      }
+    });
+  }
+}
+
+
+
+// Function to update selectable data with disabled status
+function updateSelectableData() {
+  const tab = document.getElementById('selectableTab');
+  const checkboxes = tab.querySelectorAll('input[type="checkbox"]');
+  checkboxes.forEach((checkbox, index) => {
+    const itemId = selectableData[index][4];
+    const disabled = isSelected(itemId);
+  });
+  
+  // Update the first tab if it is active
+  const firstTab = document.getElementById('itemsSelected');
+  if (firstTab.classList.contains('active')) {
+    const selectedTable = firstTab.querySelector('table');
+    if (selectedTable) {
+      const selectedRows = selectedTable.querySelectorAll('tr');
+      selectedRows.forEach(row => {
+        const productIdCell = row.lastElementChild;
+        const productId = productIdCell.textContent;
+        const checkbox = checkboxes.find(checkbox => checkbox.value === productId);
+        if (checkbox) {
+          const checked = checkbox.checked;
+          const index = selectedItems.indexOf(productId);
+          if (!checked && index !== -1) {
+            // If checkbox is unchecked and item is not selected anymore, remove the row
+            row.remove();
+          }
+        }
+      });
+    }
+  }
+}
+
+
+// Function to display "Items You Can Select" tab
+function displaySelectTable() {
+  calculateSelectableData();
+  const tab = document.getElementById('selectableTab');
+  const table = createTable(['Serial', 'Select Item', 'Category', 'Name', 'Make', 'Model', 'ProductID']);
+  const tbody = table.querySelector('tbody');
+
+  selectableData.forEach((item, index) => {
+    const row = document.createElement('tr');
+
+    // Create Serial column
+    const serialCell = document.createElement('td');
+    serialCell.textContent = index + 1;
+    row.appendChild(serialCell);
+
+    // Create Select Item column with checkboxes
+    const selectCell = document.createElement('td');
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.name = 'selectItem';
+    checkbox.value = item[4]; // Assuming ProductID is at index 4
+    checkbox.checked = isSelected(item[4]); // Check if item is selected
+    // Add event listener for checkbox change
+    checkbox.addEventListener('change', function() {
+      handleCheckboxChange(this, item[4], item);
+    });
+    selectCell.appendChild(checkbox);
+    row.appendChild(selectCell);
+
+// Create cells for remaining data
+for (let i = 0; i < item.length; i++) {
+  if (i !== 4 && i !== 5) { // Skip adding ProductID and disabled status
+    const cell = document.createElement('td');
+    cell.textContent = item[i];
+    row.appendChild(cell);
+  } else if (i === 4) { // Add ProductID to the last column
+    const cell = document.createElement('td');
+    cell.textContent = item[i];
+    row.appendChild(cell);
+  }
+}
+
+
+    // Append the row to the tbody
+    tbody.appendChild(row);
+  });
+
+  // Clear existing content and append the updated table
+  tab.innerHTML = '';
+  tab.appendChild(table);
+}
+
+// Function to check if an item is selected
+function isSelected(itemId) {
+    return selectedItems.includes(itemId);
+}
+function appendSelectedItem(item) {
+  const tab = document.getElementById('itemsSelected');
+  let table = tab.querySelector('maintable');
+  if (!table) {
+    // If table does not exist, create it with headers
+    table = createTablemain(['Serial No', 'Category', 'Name', 'Make', 'Model', 'ProductID', 'Condition', 'Remark' ]);
+    tab.appendChild(table);
+  }
+  let tbody = table.querySelector('tbody');
+  if (!tbody) {
+    // If tbody does not exist, create it
+    tbody = document.createElement('tbody');
+    table.appendChild(tbody);
+  }
+  const row = document.createElement('tr');
+
+  // Serial No
+  const serialNoCell = document.createElement('td');
+  serialNoCell.textContent = tbody.children.length + 1;
+  row.appendChild(serialNoCell);
+
+  // Regular item data
+  item.slice(0, -1).forEach((value, index) => {
+    const cell = document.createElement('td');
+    cell.textContent = value;
+    row.appendChild(cell);
+  });
+
+  // Condition dropdown
+  const conditionCell = document.createElement('td');
+  const conditionSelect = document.createElement('select');
+  conditionSelect.innerHTML = '<option value="good">Good</option><option value="notok">Not OK</option><option value="damaged">Damaged</option>';
+  conditionCell.appendChild(conditionSelect);
+  row.appendChild(conditionCell);
+
+  // Remark input box
+  const remarkCell = document.createElement('td');
+  const remarkInput = document.createElement('input');
+  remarkInput.type = 'text';
+  remarkInput.placeholder = 'Enter remark';
+  remarkCell.appendChild(remarkInput);
+  row.appendChild(remarkCell);
+
+
+
+
+  tbody.appendChild(row);
+}
+
+function removeSelectedItem(itemId) {
+  const tab = document.getElementById('itemsSelected');
+  const table = tab.querySelector('table');
+  if (table) {
+    const tbody = table.querySelector('tbody');
+    const rows = tbody.querySelectorAll('tr');
+    rows.forEach(row => {
+      const productIdCell = row.lastElementChild;
+      if (productIdCell.textContent === itemId) {
+        row.remove();
+        // Uncheck the corresponding checkbox in the second tab
+        uncheckCheckbox(itemId);
+      }
+    });
+  }
+}
+
+function uncheckCheckbox(itemId) {
+  // Uncheck the checkbox in the second tab corresponding to the deleted item
+  const tab = document.getElementById('selectableTab');
+  const checkboxes = tab.querySelectorAll('input[type="checkbox"]');
+  checkboxes.forEach(checkbox => {
+    if (checkbox.value === itemId) {
+      checkbox.checked = false;
+    }
+  });
+}
+
+
+
+function createTablemain(columns) {
+      const table = document.createElement('maintable');
+      const thead = document.createElement('thead');
+      const tbody = document.createElement('tbody');
+
+      // Create table header
+      const headerRow = document.createElement('tr');
+      columns.forEach(column => {
+        const th = document.createElement('th');
+        th.textContent = column;
+        headerRow.appendChild(th);
+      });
+      thead.appendChild(headerRow);
+
+      // Append header to table
+      table.appendChild(thead);
+
+      // Append tbody to table
+      table.appendChild(tbody);
+
+      return table;
+    }
+
+
+    function createTable(columns) {
+      const table = document.createElement('table');
+      const thead = document.createElement('thead');
+      const tbody = document.createElement('tbody');
+
+      // Create table header
+      const headerRow = document.createElement('tr');
+      columns.forEach(column => {
+        const th = document.createElement('th');
+        th.textContent = column;
+        headerRow.appendChild(th);
+      });
+      thead.appendChild(headerRow);
+
+      // Append header to table
+      table.appendChild(thead);
+
+      // Append tbody to table
+      table.appendChild(tbody);
+
+      return table;
+    }
+
+    function appendRow(table, serial, rowData) {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${serial}</td>
+        <td>${rowData.Category}</td>
+        <td>${rowData.Name}</td>
+        <td>${rowData.Make}</td>
+        <td>${rowData.Model}</td>
+        <td>${rowData.ProductID}</td>
+      `;
+      table.lastChild.appendChild(row);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Handover Form</title>
+<style>
+  table {
+    border-collapse: collapse;
+    font-size: 10px !important;
+  }
+  th, td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
+    font-size: 10px !important;
+  }
+  th {
+    font-size: 10px !important;
+    background-color: lightgray;
+  }
+</style>
+</head>
+<body>
+
+<h2>Handover Form</h2>
+<div id="table-container">
+  <!-- The HTML table will be displayed here -->
+</div>
+<form id="handoverForm" enctype="multipart/form-data">
+
+
+    
+    <label id="originSite">Origin of Site:</label>
+    <label id="originSiteLabel">Loading Origin of Site...</label><br><br>
+  
+    <label id="destinationSite">Destination Site:</label>
+    <label id="destinationSiteLabel"> Loading Destination Site...</label><br><br>
+  
+    <label id="handoverPersonName">Handover Person Name:</label>
+    <label id="handoverPersonNameLabel">Loading Handover Person Name...</label><br><br>
+  
+    <label id="receiverPersonName">Receiver Person Name:</label>
+    <label id="receiverPersonNameLabel"> Loading Receiver Person Name...</label><br><br>
+
+
+    <label id="count">Entered Count:</label><br>
+    <label id="countLabel">Loading Entered Count...</label><br><br>
+  
+
+  <table id="mainTable">
+    <th>Serial No</th>
+    <th>Product Category</th>
+    <th>Product Name</th>
+    <th>Condition</th>
+    <th>Remarks(Sender)</th>
+    <th>Equipment Condition (Sender)</th>
+    <th>Equipment Condition (Reciever)</th>
+    <th>Remarks (Reciever)</th>
+  </table><br>
+
+<button>Ask Approval</button>
+<button>Accept Items</button>
+</form>
+<script>
+  window.onload = function() {
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", "/get_form_data", true);
+      xhr.onreadystatechange = function() {
+          if (xhr.readyState == 4 && xhr.status == 200) {
+              var data = JSON.parse(xhr.responseText);
+              var table = document.getElementById("mainTable");
+
+              data.forEach(function(row) {
+                  var newRow = table.insertRow();
+
+                  var serialNoCell = newRow.insertCell(0);
+                  serialNoCell.textContent = row['Serial No'];
+
+                  var productCategoryCell = newRow.insertCell(1);
+                  productCategoryCell.textContent = row['productCategory'];
+
+                  var productNameCell = newRow.insertCell(2);
+                  productNameCell.textContent = row['productName'];
+
+                  var conditionCell = newRow.insertCell(3);
+                  conditionCell.textContent = row['condition'];
+
+                  var remarksCell = newRow.insertCell(4);
+                  remarksCell.textContent = row['remarks'];
+
+                  var checkboxCellDisabled = newRow.insertCell(5);
+                  checkboxCellDisabled.innerHTML = `
+                      <input type="checkbox" name="frontend" ${row['frontend'] ? 'checked' : ''} disabled> Frontend
+                      <input type="checkbox" name="backend" ${row['backend'] ? 'checked' : ''} disabled> Backend
+                      <input type="checkbox" name="cleanup" ${row['cleanup'] ? 'checked' : ''} disabled> Cleanup
+                  `;
+
+                  var checkboxCellEnabled = newRow.insertCell(6);
+                  checkboxCellEnabled.innerHTML = `
+                      <input type="checkbox" name="reached"> Reached
+                      <input type="checkbox" name="frontend" > Frontend
+                      <input type="checkbox" name="backend"> Backend
+                      <input type="checkbox" name="cleanup" > Cleanup
+                  `;
+
+                  var remarksInputCell = newRow.insertCell(7);
+                  remarksInputCell.innerHTML = `
+                      <input type="text" name="remarksReceiver" value="">
+                  `;
+              });
+          }
+      };
+      xhr.send();
+  };
+</script>
+</body>
+</html>

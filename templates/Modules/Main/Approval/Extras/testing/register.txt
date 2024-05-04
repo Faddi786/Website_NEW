@@ -1,0 +1,12 @@
+Account Type
+Manager
+Site location
+Add new location
+Employee
+employee name
+id
+pass
+phone number
+address
+adhar card
+pan card

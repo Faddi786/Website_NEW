@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dynamic Links with Numbers</title>
+<style>
+  .custom-link {
+    margin-bottom: 5px;
+    display: block; /* Change to block to make links appear on separate lines */
+    width: 100%; /* Adjust width as needed */
+    height: 40px; /* Adjust height as needed */
+    background-color: #007bff; /* Blue color, you can change it */
+    color: white;
+    text-decoration: none; /* Remove default underline */
+    line-height: 40px; /* Center text vertically */
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 4px; /* Add some rounded corners */
+    box-sizing: border-box; /* Include padding and border in the width */
+  }
+
+  .custom-link:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+  }
+</style>
+</head>
+<body>
+
+<div id="container"></div> <!-- This is the container where the links will be appended -->
+
+<script>
+  // Function to make AJAX request
+  function getRowNumber() {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "/approve_get_link_number", true);
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        var numberOfLinks = parseInt(xhr.responseText);
+        createLinks(numberOfLinks);
+      }
+    };
+    xhr.send();
+  }
+
+  // Function to create links dynamically
+  function createLinks(numberOfLinks) {
+    var container = document.getElementById("container");
+    for (var i = 1; i <= numberOfLinks; i++) {
+      var link = document.createElement("a");
+      link.href = "#"; // Set href to "#" for now, will update with proper link later
+      link.className = "custom-link";
+      link.textContent = "Link " + i;
+      link.setAttribute("data-number", i); // Set data-number attribute with button number
+      link.onclick = function() {
+        sendButtonNumber(this.getAttribute("data-number"));
+        this.href = "{{ url_for('approve_form_data_display') }}"; // Set href attribute when clicked
+
+      };
+      container.appendChild(link);
+    }
+  }
+
+  // Function to send button number to Flask function
+  function sendButtonNumber(number) {
+    var xhr = new XMLHttpRequest(); 
+    xhr.open("GET", "/approve_get_button_number?button_number=" + number, true);
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        console.log("Button number sent to Flask: " + number);
+        x = "Button number sent to Flask: " + number
+        return x
+      }
+    };
+    xhr.send();
+  }
+
+  // Call getRowNumber function on window load
+  window.onload = function () {
+    getRowNumber();
+  };
+</script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+# Sample data
+data = {
+
+    'originSite': 'Site A',
+    'destinationSite': 'Site B',
+    'handoverPersonName': 'John Doe',
+    'receiverPersonName': 'Jane Smith',
+    'count': 10,
+    'rowvalues': [
+        {'Serial No': 1.1, 'productCategory': 'product1', 'productName': 'product1', 'condition': 'Good', 'remarks': "None", 'reached': False, 'frontend': True, 'backend': False, 'cleanup': False},
+        {'Serial No': 1.2, 'productCategory': 'product1', 'productName': 'product1', 'condition': 'Good', 'remarks': None, 'reached': False, 'frontend': False, 'backend': False, 'cleanup': False},
+        {'Serial No': 1.3, 'productCategory': 'product1', 'productName': 'product1', 'condition': 'Good', 'remarks': None, 'reached': False, 'frontend': False, 'backend': False, 'cleanup': False}
+    ]
+}
