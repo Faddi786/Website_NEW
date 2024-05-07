@@ -18,7 +18,6 @@ from datetime import date
 from dateutil import tz
 from datetime import datetime as dt, timezone
 import datetime
-
 import datetime
 from datetime import datetime
 from flask import Flask, jsonify
@@ -974,6 +973,16 @@ def approve_send_get_button_number():
 def approve_send_form_data_display():
     return render_template('Modules/Main/Approval/Approval Send/templates/approve_send_form_data.html')
 
+@app.route('/get_form_data')
+def get_form_data():
+    global approve_send_extracted_rows
+    print("This is the rowwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww whatsasioadhwioe fhweuilbgy",approve_send_extracted_rows)
+    # Convert DataFrame to JSON string and return
+    json_data = jsonify(approve_send_extracted_rows)
+    return json_data
+
+
+
 '''
 @app.route('/render_approve_receiver')
 def render_approve_receiver():
@@ -995,13 +1004,7 @@ def render_approve_receiver():
 
 
 
-@app.route('/get_form_data')
-def get_form_data():
-    global approve_send_extracted_rows
-    print("This is the rowwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww whatsasioadhwioe fhweuilbgy",approve_send_extracted_rows)
-    # Convert DataFrame to JSON string and return
-    json_data = jsonify(approve_send_extracted_rows)
-    return json_data
+
 
 
 @app.route('/invent')
@@ -1066,6 +1069,7 @@ def invent_dashboard():
     except Exception as e:
         return jsonify({'error': str(e)})
 
-    
+
+
 if __name__ == "__main__":
     app.run(debug=True, port=5001)
