@@ -13,7 +13,7 @@ less_df = pd.DataFrame()  # Initialize less_df as an empty DataFrame
 @app.route('/approval_table', methods=['GET'])
 def approval_table():
     global less_df
-
+    #
     # Load the data from the Excel file into a pandas DataFrame
     df = pd.read_excel('handover_data.xlsx')
 
