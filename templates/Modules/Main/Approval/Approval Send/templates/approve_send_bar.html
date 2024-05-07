@@ -59,11 +59,11 @@ function getRowNumber() {
       link.className = "custom-link";
       link.textContent = "Link " + i;
       link.setAttribute("data-number", i); // Set data-number attribute with button number
-      link.onclick = function() {
-        sendButtonNumber(this.getAttribute("data-number"));
-        this.href = "{{ url_for('approve_send_form_data_display') }}"; // Set href attribute when clicked
+        link.onclick = function() {
+          sendButtonNumber(this.getAttribute("data-number"));
+          this.href = "{{ url_for('approve_send_form_data_display') }}"; // Set href attribute when clicked
 
-      };
+        };
       container.appendChild(link);
     }
   }

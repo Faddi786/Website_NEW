@@ -117,18 +117,35 @@ background-color: #0056b3; /* Button color on hover */
     <div class="left-pane">
 
         <!-- Use links within a list -->
-        <h3>Send / Receive Items</h3>
+        <h3></h3>
+
+        <h3>Start Transaction</h3>
+
             <a href="{{ url_for('send_items') }}">Send Items</a><br><br>
+
+            <h3>Ask for Approval</h3>
+
+
             <a href="{{ url_for('receive_items') }}">Recieve Items</a><br><br>
 
-            <h3>Approve Items</h3>
-            <a href="{{ url_for('approve_send') }}">Approve Send Items</a><br><br>
-            <a href="{{ url_for('approve_receive') }}">Approve Recieve Items</a><br><br>
+            <h3>Give Approval</h3>
+
+
+            <a href="{{ url_for('approve_send') }}">Approve Items</a><br><br>
+
+            <h3>Know Transfer Status</h3>
+
+            <a href="{{ url_for('approve_receive') }}">Transfer Status</a><br><br>
+
 
             <h3>Inventory Database</h3>
             <a href="{{ url_for('my_invent') }}">Know My Inventory</a><br><br>
             <a href="{{ url_for('invent') }}">Inventory</a><br><br>
 
+            <h3>Transfer History</h3>
+
+
+            <a href="{{ url_for('approve_receive') }}">Transfer History</a><br><br>
 
             <a href="{{ url_for('return_to_login') }}" class="button">Logout</a>
 
