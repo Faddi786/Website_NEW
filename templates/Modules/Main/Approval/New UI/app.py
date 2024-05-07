@@ -23,7 +23,7 @@ def approval_table():
     # Filter the DataFrame based on the parameters
     source_df = df[(df['FromProject'] == project) & (df["ApprovalToSend"] == "yes")]
     destination_df = df[(df['FromProject'] == project)].copy()  # Make a copy to avoid SettingWithCopyWarning
-    #
+    
     # Update columns in the DataFrames
     destination_df["ApprovalType"] = "Recieve"
     source_df["ApprovalType"] = "Send"
