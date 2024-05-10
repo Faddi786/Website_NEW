@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Receiver Form</title>
+<style>
+  table {
+    border-collapse: collapse;
+    font-size: 10px !important;
+  }
+  th, td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
+    font-size: 10px !important;
+  }
+  th {
+    font-size: 10px !important;
+    background-color: lightgray;
+  }
+</style>
+</head>
+<body>
+
+<h2>Receiver Form</h2>
+<div id="table-container">
+  <!-- The HTML table will be displayed here -->
+</div>
+<form id="handoverForm" enctype="multipart/form-data">
+
+
+    <label>Form No :</label>
+    <label id="formNo"> Loading Form No ...</label><br><br>
+
+    <label>Eway-Bill No :</label>
+    <label id="ewaybillno"> Loading Eway-Bill No ...</label><br><br>
+
+    <label>From Person :</label>
+    <label id="FromPerson">Loading From Person ...</label><br><br>
+  
+    <label>From Project :</label>
+    <label id="FromProject">Loading From Project ...</label><br><br>
+
+    <label>To Person :</label>
+    <label id="ToPerson"> Loading To Person ...</label><br><br>
+
+    <label>To Project :</label>
+    <label id="ToProject"> Loading To Project ...</label><br><br>
+
+
+  
+    <button id="approvalButton" type="button">Ask Approval to Receive</button>
+    <h4 id="statusMessage" style=" margin-top: 10px;">Approval has not been asked yet, press the button to ask for approval to receive the items</h4>
+
+  <table id="mainTable">
+    <th>Serial</th>
+    <th>Category</th>
+
+    <th>Name</th>
+    <th>Make</th>
+    <th>Model</th>
+    <th>Product ID</th>
+    <th>Condition (Sender)</th>
+    <th>Remarks(Sender)</th>
+    <th>Condition (Reciever)</th>
+    <th>Remarks (Reciever)</th>
+  </table><br>
+
+
+
+
+</form>
+<script>
+
+
+var tableBody = document.querySelector("#mainTable tbody");
+
+var submitButton = document.getElementById("approvalButton");
+submitButton.addEventListener("click", function() {
+    document.getElementById("statusMessage").textContent = "The transfer initiation has begun, please wait for success message";
+    document.getElementById("approvalButton").disabled = true;
+    logRowValues();
+});
+
+function logRowValues() {
+var formObject = []; // Initialize formObject as an array
+
+// Get the values from the labels
+var fromPersonValue = document.getElementById("FromPerson").textContent.trim();
+var fromProjectValue = document.getElementById("FromProject").textContent.trim();
+var toPersonValue = document.getElementById("ToPerson").textContent.trim();
+var toProjectValue = document.getElementById("ToProject").textContent.trim();
+
+// Assign all key-value pairs to the formObject
+newObject = {
+    FromPerson: fromPersonValue,
+    FromProject: fromProjectValue,
+    ToPerson: toPersonValue,
+    ToProject: toProjectValue
+};
+formObject.push(newObject); // Append rowData to formObject array
+
+    // Get the value from the input box
+    var ewaybillValue = document.getElementById("ewaybillno").textContent.trim();
+    var formNo = document.getElementById("formNo").textContent.trim();
+
+    console.log("this is the form no",formNo)
+
+    // Add the input box value to the formObject
+    formObject.push({ EwayBill: ewaybillValue });
+    formObject.push({ FormNo:formNo });
+
+    console.log("This is the EwayBill value:", ewaybillValue); // Check the collected EwayBill value
+
+// Loop through table rows and collect data
+var rows = tableBody.querySelectorAll('tr');
+rows.forEach(function(row, index) {
+    if (index !== 0) { // Skip the header row
+        var cells = row.querySelectorAll('td');
+        var conditionInput = cells[8].querySelector('select[name="conditionReceiver"]');
+var selectedCondition = conditionInput.options[conditionInput.selectedIndex].value;
+
+        var rowData = {
+            ProductID: cells[2].innerText,
+            ReceiverCondition: selectedCondition,
+            ReceiverRemarks: cells[9].querySelector('input[type="text"]').value
+        };
+        formObject.push(rowData); // Append rowData to formObject array
+    }
+});
+
+
+
+console.log("This is the formObject Data", formObject); // Check the collected data in formObject
+
+
+
+var xhr = new XMLHttpRequest();
+xhr.open("POST", "http://127.0.0.1:5001/receive_approval_request", true);
+
+xhr.onreadystatechange = function() {
+    if (xhr.readyState === XMLHttpRequest.DONE) {
+        if (xhr.status === 200) {
+            console.log('Success:', xhr.responseText);
+            // Handle success response from server
+            document.getElementById("statusMessage").textContent = xhr.responseText;
+            document.getElementById("statusMessage").style.color = "green";
+            document.getElementById("approvalButton").remove();
+        } else {
+            console.error('Error:', xhr.status);
+            // Handle error response from server
+        }
+    }
+};
+
+xhr.setRequestHeader("Content-Type", "application/json"); // Set request header
+xhr.send(JSON.stringify(formObject));
+}
+
+// Declare the data variable at the global scope
+var data;
+
+    window.onload = function() {
+
+        var xhr2 = new XMLHttpRequest();
+        xhr2.open("GET", "/get_form_data", true);
+        xhr2.onreadystatechange = function() {
+            if (xhr2.readyState == 4 && xhr2.status == 200) {
+                data = JSON.parse(xhr2.responseText);
+                var table = document.getElementById("mainTable");
+                console.log("We have reached")
+                console.log(data)
+                if (data && Array.isArray(data) && data.length > 0) {
+            var firstFormData = data[0]; // Get the first dictionary from the list
+            // Update labels with values from the first dictionary
+            document.getElementById("formNo").textContent = firstFormData['FormID'] || 'Loading Form ID ...';
+            document.getElementById("ewaybillno").textContent = firstFormData['EwayBillNo'] || 'Loading Eway Bill No ...';
+
+            document.getElementById("FromPerson").textContent = firstFormData['FromPerson'] || 'Loading From Person ...';
+            document.getElementById("FromProject").textContent = firstFormData['FromProject'] || 'Loading From Project ...';
+            document.getElementById("ToPerson").textContent = firstFormData['ToPerson'] || 'Loading To Person ...';
+            document.getElementById("ToProject").textContent = firstFormData['ToProject'] || 'Loading To Project ...';
+        } else {
+            console.error("No form data or invalid data format received");
+        }
+            // Check if AskReceiveApproval is "yes" in the first dictionary
+            if (data.length > 0 && data[0]['AskReceiveApproval'] === 'yes') {
+                var approvalButton = document.getElementById("approvalButton");
+                statusMessage.textContent = "You have already asked for approval. Please contact your manager and inform him to approve.";
+                document.getElementById("statusMessage").style.color = "green";
+                document.getElementById("approvalButton").remove();
+            }
+
+
+                data.forEach(function(row,index) {
+                    var newRow = table.insertRow();
+
+                    var serialNoCell = newRow.insertCell(0);
+    serialNoCell.textContent = index + 1; // Generate dynamic serial number starting from 1
+
+                    var productCategoryCell = newRow.insertCell(1);
+                    productCategoryCell.textContent = row['Category'];
+
+                    var ProductNoCell = newRow.insertCell(2);
+                    ProductNoCell.textContent = row['ProductID'];
+
+                    var productNameCell = newRow.insertCell(3);
+                    productNameCell.textContent = row['Name'];
+
+                    var productNameCell = newRow.insertCell(4);
+                    productNameCell.textContent = row['Make'];
+
+                    var ModelCell = newRow.insertCell(5);
+                    ModelCell.textContent = row['Model'];
+
+                    var conditionCell = newRow.insertCell(6);
+                    conditionCell.textContent = row['SenderCondition'];
+
+                    var remarksCell = newRow.insertCell(7);
+                    remarksCell.textContent = row['SenderRemarks'];
+
+                    var remarksInputCell = newRow.insertCell(8);
+remarksInputCell.innerHTML = `
+    <select name="conditionReceiver">
+        <option value="Good">Good</option>
+        <option value="Not Ok">Not Ok</option>
+        <option value="Damaged">Damaged</option>
+    </select>
+`;
+
+
+                    var remarksInputCell = newRow.insertCell(9);
+                    remarksInputCell.innerHTML = `
+                        <input type="text" name="remarksReceiver" value="">
+                    `;
+                });
+           }
+        };
+        xhr2.send();
+    };
+
+
+</script>
+
+</body>
+</html>

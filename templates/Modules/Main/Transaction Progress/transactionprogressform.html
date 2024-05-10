@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Approve Receive Items Form</title>
+<style>
+  table {
+    border-collapse: collapse;
+    font-size: 10px !important;
+  }
+  th, td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
+    font-size: 10px !important;
+  }
+  th {
+    font-size: 10px !important;
+    background-color: lightgray;
+  }
+</style>
+</head>
+<body>
+
+<h2>Transaction Status Form</h2>
+<div id="table-container">
+  <!-- The HTML table will be displayed here -->
+</div>
+<form id="handoverForm" enctype="multipart/form-data">
+
+
+    <label>Form No :</label>
+    <label id="formNo"> Loading Form No ...</label><br><br>
+
+    <label>Eway-Bill No :</label>
+    <label id="ewaybillno"> Loading Eway-Bill No ...</label><br><br>
+
+    <label>From Person :</label>
+    <label id="FromPerson">Loading From Person ...</label><br><br>
+  
+    <label>From Project :</label>
+    <label id="FromProject">Loading From Project ...</label><br><br>
+
+    <label>To Person :</label>
+    <label id="ToPerson"> Loading To Person ...</label><br><br>
+
+    <label>To Project :</label>
+    <label id="ToProject"> Loading To Project ...</label><br><br>
+
+
+  
+
+  <table id="mainTable">
+    <th>Serial</th>
+    <th>Category</th>
+    <th>ID</th>
+    <th>Product Name</th>
+    <th>Product Make</th>
+    <th>Model</th>
+    <th>Condition (Sender)</th>
+    <th>Remarks(Sender)</th>
+    <th>Condition (Reciever)</th>
+    <th>Remarks (Reciever)</th>
+  </table><br>
+
+
+
+
+
+</form>
+<script>
+
+
+
+// Declare the data variable at the global scope
+var data;
+
+    window.onload = function() {
+
+        var xhr2 = new XMLHttpRequest();
+        xhr2.open("GET", "/get_form_data", true);
+        xhr2.onreadystatechange = function() {
+            if (xhr2.readyState == 4 && xhr2.status == 200) {
+                data = JSON.parse(xhr2.responseText);
+                var table = document.getElementById("mainTable");
+                console.log("We have reached")
+                console.log(data)
+
+                if (data && Array.isArray(data) && data.length > 0) {
+            var firstFormData = data[0]; // Get the first dictionary from the list
+            // Update labels with values from the first dictionary
+
+            // Update labels with values from the first dictionary
+            document.getElementById("formNo").textContent = firstFormData['FormID'] || 'Loading Form ID ...';
+            document.getElementById("ewaybillno").textContent = firstFormData['EwayBillNo'] || 'Loading Eway Bill No ...';
+
+
+            document.getElementById("FromPerson").textContent = firstFormData['FromPerson'] || 'Loading From Person ...';
+            document.getElementById("FromProject").textContent = firstFormData['FromProject'] || 'Loading From Project ...';
+            document.getElementById("ToPerson").textContent = firstFormData['ToPerson'] || 'Loading To Person ...';
+            document.getElementById("ToProject").textContent = firstFormData['ToProject'] || 'Loading To Project ...';
+        } else {
+            console.error("No form data or invalid data format received");
+        }
+        
+            // Check if AskReceiveApproval is "yes" in the first dictionary
+            if (data.length > 0 && data[0]['ApprovalToReceive'] === 'yes') {
+                var approvalButton = document.getElementById("approvalButton");
+                var approvalText = document.createTextNode("You have already approved this form transaction to receive items");
+                approvalButton.parentNode.replaceChild(approvalText, approvalButton);
+            }
+
+
+            data.forEach(function(row, index) {
+    var newRow = table.insertRow();
+
+    var serialNoCell = newRow.insertCell(0);
+    serialNoCell.textContent = index + 1; // Generate dynamic serial number starting from 1
+
+                    var productCategoryCell = newRow.insertCell(1);
+                    productCategoryCell.textContent = row['Category'];
+
+                    var ProductNoCell = newRow.insertCell(2);
+                    ProductNoCell.textContent = row['ProductID'];
+
+                    var productNameCell = newRow.insertCell(3);
+                    productNameCell.textContent = row['Name'];
+
+                    var productNameCell = newRow.insertCell(4);
+                    productNameCell.textContent = row['Make'];
+
+                    var ModelCell = newRow.insertCell(5);
+                    ModelCell.textContent = row['Model'];
+
+                    var SenderconditionCell = newRow.insertCell(6);
+                    SenderconditionCell.textContent = row['SenderCondition'];
+
+                    var SenderremarksCell = newRow.insertCell(7);
+                    SenderremarksCell.textContent = row['SenderRemarks'];
+
+                    var ReceiverconditionCell = newRow.insertCell(8);
+                    ReceiverconditionCell.textContent = row['ReceiverCondition'];
+
+                    var ReceiverremarksCell = newRow.insertCell(9);
+                    ReceiverremarksCell.textContent = row['ReceiverRemarks'];
+
+
+                });
+           }
+        };
+        xhr2.send();
+    };
+
+
+</script>
+
+</body>
+</html>

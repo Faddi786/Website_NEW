@@ -1,0 +1,14 @@
+rename h4 send/receive items
+remove ask for approval h4 tag
+remove drop down for from project in handover form
+add type of transaction in transaction in progress table
+add current owner in know my inventory
+order the column names
+add current owner in my project inventory
+add type of form in transaction history
+replace null values with a suitable word
+change name of forms and give suitable names
+add name of the project on webpage
+
+
+drop down values for receiver and destination

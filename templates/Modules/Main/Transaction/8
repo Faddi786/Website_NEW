@@ -1,6 +1,0 @@
-Collecting certifi
-  Using cached certifi-2024.2.2-py3-none-any.whl.metadata (2.2 kB)
-Requirement already satisfied: pillow in c:\users\zafar\appdata\local\programs\python\python312\lib\site-packages (10.3.0)
-Using cached certifi-2024.2.2-py3-none-any.whl (163 kB)
-Installing collected packages: certifi
-Successfully installed certifi-2024.2.2

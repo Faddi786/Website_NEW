@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Transaction History</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <style>  
+            table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }</style>
+    </head>
+    <body>
+        <header>
+            <h2 align="center">TRANSACTION HISTORY</h2>
+        </header>
+        <table id="transactionTable">
+            <thead>
+                <tr>
+                    <th>Serial No.</th>
+                    <th>Form No.</th>
+                    <th>E-way Bill</th>
+                    <th>Source</th>
+                    <th>Destination</th>
+                    <th>Sender</th>
+                    <th>Receiver</th>
+                    <th>Date of Initiation</th>
+                    <th>View Button</th>
+                </tr>
+                <tr id="filterRow">
+                    <th></th>
+                    <th><select id="formIDFilter"></select></th>
+                    <th><select id="ewayFilter"></select></th>
+                    <th><select id="sourceFilter"></select></th>
+                    <th><select id="destinationFilter"></select></th>
+                    <th><select id="senderFilter"></select></th>
+                    <th><select id="receiverFilter"></select></th>
+                    <th><select id="doiFilter"></select></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="transactionData"></tbody>
+        </table>
+        <script>
+            $(document).ready(function(){
+                var allData;
+
+                $.getJSON('/transaction_history_table', function(data){
+                    allData = data;
+                    
+                    populateTable(data);
+                    populateFilterDropdowns(data);
+                });
+
+                function populateTable(data){
+                    var i = 0;
+                    $('#transactionData').empty();
+                    $.each(data, function(index, transaction){
+                        $('#transactionTable tbody').append('<tr>' +
+                            '<td>' + (++i) + '</td>' +
+                            '<td>' + transaction.FormID + '</td>' +
+                            '<td>' + transaction.EwayBillNo + '</td>' +
+                            '<td>' + transaction.FromProject + '</td>' +
+                            '<td>' + transaction.ToProject + '</td>' +
+                            '<td>' + transaction.FromPerson + '</td>' +
+                            '<td>' + transaction.ToPerson + '</td>' +
+                            '<td>' + transaction.HandoverDate + '</td>' +
+                            '<td><button class="viewButton" data-formid="' + transaction.FormID + '">View</button></td>' +
+                            '</tr>');
+                    });
+                }
+
+                function populateFilterDropdowns(data){
+                    // Populate filter dropdowns
+                    var serialOptions = [];
+                    var formIDOptions = [];
+                    var ewayOptions = [];
+                    var sourceOptions = [];
+                    var destinationOptions = [];
+                    var senderOptions = [];
+                    var receiverOptions = [];
+                    var doiOptions = [];
+
+                    formIDOptions.push("NONE");
+                    $('#formIDFilter').append('<option value="'+"NONE"+'">'+"NONE"+'</option>')
+
+                    ewayOptions.push("NONE");
+                    $('#ewayFilter').append('<option value="'+"NONE"+'">'+"NONE"+'</option>')
+
+                    sourceOptions.push("NONE");
+                    $('#sourceFilter').append('<option value="'+"NONE"+'">'+"NONE"+'</option>')
+
+                    destinationOptions.push("NONE");
+                    $('#destinationFilter').append('<option value="'+"NONE"+'">'+"NONE"+'</option>')
+
+                    senderOptions.push("NONE");
+                    $('#senderFilter').append('<option value="'+"NONE"+'">'+"NONE"+'</option>')
+
+                    receiverOptions.push("NONE");
+                    $('#receiverFilter').append('<option value="'+"NONE"+'">'+"NONE"+'</option>')
+
+                    doiOptions.push("NONE");
+                    $('#doiFilter').append('<option value="'+"NONE"+'">'+"NONE"+'</option>')
+
+                    $.each(data, function(index, item) {
+                        if(!formIDOptions.includes(item.FormID)) {
+                            formIDOptions.push(item.FormID);
+                            $('#formIDFilter').append('<option value="'+item.FormID+'">'+item.FormID+'</option>')
+                        }
+
+                        if(!ewayOptions.includes(item.EwayBillNo)) {
+                            ewayOptions.push(item.EwayBillNo);
+                            $('#ewayFilter').append('<option value="'+item.EwayBillNo+'">'+item.EwayBillNo+'</option>')
+                        }
+
+                        if (!sourceOptions.includes(item.FromProject)) {
+                            sourceOptions.push(item.FromProject);
+                            $('#sourceFilter').append('<option value="' + item.FromProject + '">' + item.FromProject + '</option>');
+                        }
+
+                        if (!destinationOptions.includes(item.ToProject)) {
+                            destinationOptions.push(item.ToProject);
+                            $('#destinationFilter').append('<option value="' + item.ToProject + '">' + item.ToProject + '</option>');
+                        }
+
+                        if (!senderOptions.includes(item.FromPerson)) {
+                            senderOptions.push(item.FromPerson);
+                            $('#senderFilter').append('<option value="' + item.FromPerson + '">' + item.FromPerson + '</option>');
+                        }
+
+                        if (!receiverOptions.includes(item.ToPerson)) {
+                            receiverOptions.push(item.ToPerson);
+                            $('#receiverFilter').append('<option value="' + item.ToPerson + '">' + item.ToPerson + '</option>');
+                        }
+
+                        if(!doiOptions.includes(item.HandoverDate)) {
+                            doiOptions.push(item.HandoverDate);
+                            $('#doiFilter').append('<option value="'+item.HandoverDate+'">'+item.HandoverDate+'</option>')
+                        }
+                    });
+                }
+                // Event listeners for filter dropdowns
+                $('#formIDFilter').change(function(){
+                    var selectedFormID = $(this).val();
+                    var filteredData;
+                    if (selectedFormID == "NONE"){
+                        filteredData = allData;
+                    } else {
+                        filteredData = allData.filter(function(item) {
+                            return item.FormID === selectedFormID;
+                        })
+                    }
+                    populateTable(filteredData);
+                });
+
+                $('#ewayFilter').change(function(){
+                    var selectedEway = $(this).val();
+                    var filteredData;
+                    if (selectedEway == "NONE") {
+                        filteredData = allData;
+                    } else {
+                        filteredData = allData.filter(function(item) {
+                            return item.EwayBillNo === selectedEway;
+                        })
+                    }
+                    populateTable(filteredData);
+                });
+
+                $('#sourceFilter').change(function() {
+                    var selectedSource = $(this).val();
+                    var filteredData;
+                    if (selectedSource == "NONE"){
+                        filteredData = allData;
+                    } else {
+                        filteredData = allData.filter(function(item) {
+                            return item.FromProject === selectedSource;
+                        })
+                    }
+                    populateTable(filteredData);
+                });
+
+                $('#destinationFilter').change(function() {
+                    var selectedDestination = $(this).val();
+                    var filteredData;
+                    if (selectedDestination == "NONE"){
+                        filteredData = allData;
+                    } else {
+                        filteredData = allData.filter(function(item) {
+                            return item.ToProject === selectedDestination;
+                        })
+                    }
+                    populateTable(filteredData);
+                });
+
+                $('#senderFilter').change(function() {
+                    var selectedSender = $(this).val();
+                    var filteredData;
+                    if (selectedSender == "NONE"){
+                        filteredData = allData;
+                    } else {
+                        filteredData = allData.filter(function(item) {
+                            return item.FromPerson === selectedSender;
+                        })
+                    }
+                    populateTable(filteredData);
+                });
+
+                $('#receiverFilter').change(function() {
+                    var selectedReceiver = $(this).val();
+                    var filteredData;
+                    if (selectedReceiver == "NONE"){
+                        filteredData = allData;
+                    } else {
+                        filteredData = allData.filter(function(item) {
+                            return item.ToPerson === selectedReceiver;
+                        })
+                    }
+                    populateTable(filteredData);
+                });
+
+                $('#doiFilter').change(function(){
+                    var selectedDOI = $(this).val();
+                    var filteredData;
+                    if (selectedDOI == "NONE"){
+                        filteredData = allData;
+                    } else {
+                        filteredData = allData.filter(function(item) {
+                            return item.HandoverDate === selectedDOI;
+                        })
+                    }
+                    populateTable(filteredData);
+                });
+
+                // Add click event handler for the dynamically created buttons
+                $('#transactionTable').on('click', '.viewButton', function(){
+                    var formID = $(this).data('formid');
+                    // Perform any action you want with the formID
+                    console.log('Form ID:', formID);
+                    
+                    // Send the form ID to the Flask route using XMLHttpRequest
+                    sendFormID(formID);
+
+                    // Redirect to the desired route
+                    window.location.href = "/transaction_history_form_data";
+                });
+            });
+
+            // Function to send form ID to Flask route
+            function sendFormID(formID) {
+                var xhr = new XMLHttpRequest(); 
+                xhr.open("GET", "/send_formid?form_id=" + formID, true);
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        console.log("Form ID sent to Flask: " + formID);
+                    }
+                };
+                xhr.send();
+            }
+
+        </script> 
+    </body>
+</html>
