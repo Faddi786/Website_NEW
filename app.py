@@ -71,11 +71,11 @@ app.register_blueprint(page_routes)
 
 @app.route('/manager')
 def manager():
-    return render_template('Modules/Main/Start/templates/manager.html')
+    return render_template('Modules/Main/Start/manager.html')
 
 @app.route('/employee')
 def employee():
-    return render_template('Modules/Main/Start/templates/employee.html')
+    return render_template('Modules/Main/Start/employee.html')
 
     
 @app.route('/get_username')
@@ -129,7 +129,8 @@ def cart_items():
     name= session.get('login_row_data', {}).get('Name')
 
     data = sendform.cart_items_function(name)
-
+    jsonify(data)
+    print('this is the data hahahah',data)
     return jsonify(combined_data=data)
 
 @app.route('/send_approval_request', methods=['POST'])
@@ -247,6 +248,8 @@ def my_project_dashboard():
     project = session.get('login_row_data', {}).get('Project')
     data = dashboard.my_project_dashboard_function(project)
     return data
+
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=5001)

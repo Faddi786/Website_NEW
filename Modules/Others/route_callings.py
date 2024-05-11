@@ -4,7 +4,7 @@ page_routes = Blueprint('page_routes', __name__)
 
 @page_routes.route('/')
 def index():
-    return render_template('Modules/Main/Start/templates/login.html')
+    return render_template('Modules/Main/Start/login.html')
 
 @page_routes.route('/send_items')
 def send_items():
@@ -12,19 +12,11 @@ def send_items():
 
 @page_routes.route('/welcome')
 def welcome():
-    return render_template('Modules/Main/Start/templates/welcome.html')
+    return render_template('Modules/Main/Start/welcome.html')
 
 @page_routes.route('/return_to_login')
 def return_to_login():
-    return render_template('Modules/Main/Start/templates/login.html')
-
-@page_routes.route('/approve_receive')
-def approve_receive():
-    return render_template('Modules/Main/Approval/Approval Receive/templates/approve_receive_bar.html')
-
-@page_routes.route('/approve_send')
-def approve_send():
-    return render_template('Modules/Main/Approval/Approval Send/templates/approve_send_bar.html')
+    return render_template('Modules/Main/Start/login.html')
 
 @page_routes.route('/transactionhistory')
 def transactionhistory():
@@ -44,15 +36,15 @@ def approve_table():
 
 @page_routes.route('/invent')
 def invent():
-    return render_template('Modules/Main/Dashboard/templates/invent.html')
+    return render_template('Modules/Main/Dashboard/invent.html')
 
 @page_routes.route('/project_invent')
 def project_invent():
-    return render_template('Modules/Main/Dashboard/templates/project_invent.html')
+    return render_template('Modules/Main/Dashboard/project_invent.html')
 
 @page_routes.route('/my_invent')
 def my_invent():
-    return render_template('Modules/Main/Dashboard/templates/my_invent.html')
+    return render_template('Modules/Main/Dashboard/my_invent.html')
 
 @page_routes.route('/receive_form_data')
 def receive_form_data():

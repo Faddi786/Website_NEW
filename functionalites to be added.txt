@@ -1,0 +1,43 @@
+question :  
+what if the product has been received by the receiver but by mistake he clicks that these products have not reached him?
+
+
+all 
+transfer the code to sql
+a box for error
+add code that form should not proceed if previous stage not approved or done
+remove all null values
+determine whether to put just 'make' or 'product make' in table columns
+change variable names in code and on form
+put success and fail message in alert box
+put errors too in alert box
+
+handover form
+FROM DROP DOWN VALUES FORM PROJECT FROM PERSON should come from 
+the user should select atleast one item from the handover form else the form should not be intiated
+put preview option
+one click multiple items selected
+
+receiver form
+reached or not
+add images option
+put preview option
+
+
+tables
+remove drop down from view button
+make the filter code correct in all functions and route especially in transaction history and transaction status and transaction table code
+
+
+other 
+attach register module
+Consider using a library like jQuery to simplify DOM manipulation tasks.
+solve the login data issue
+WhatsApp should include the link to the next stage form itself
+determine tables in access
+automatic excel filling
+10 rigorous testing
+check each code logic whether it is right or not
+add delete employee
+add delete item
+

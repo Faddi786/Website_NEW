@@ -42,11 +42,32 @@ def cart_items_function(name):
     # Replace NaN values with "NAN" in result
     result = [[col if pd.notna(col) else "NAN" for col in row] for row in result]
 
+    data2 = receive_destination_dropdown_values()
+
     # Create a new list containing both data and result
-    combined_data = [data, result]
+    combined_data = [data, result, data2]
     
     return combined_data
 
+
+
+def receive_destination_dropdown_values():
+    try:
+        file = 'Excel/login_details.xlsx'
+        # Read the Excel file
+        df = pd.read_excel(file)
+        
+        # Filter out NaN values from 'Name' and 'Project' columns
+        Names = df['Name'].dropna().tolist()  
+        Projects = df['Project'].dropna().tolist()  
+
+        # Combine the lists into a larger list
+        data = [Names, Projects]
+
+        return data
+    
+    except Exception as e:
+        return {'error': str(e)}
 
 
 def send_approval_request_function(form_data):

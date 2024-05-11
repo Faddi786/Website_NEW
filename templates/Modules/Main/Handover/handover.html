@@ -81,32 +81,26 @@ th {
   <label style="margin-left: 200px;">Sender : </label>
   <label id="Sender" style="margin-right: 50px;">Loading Sender Name ....</label>
 
-  <label for="ToPerson">Receiver : </label>
-  <select id="ToPerson" name="ToPerson" style="margin-right: 20px;" required>
+  <label for="Receiver">Receiver : </label>
+  <select id="Receiver" name="Receiver" style="margin-right: 20px;" required>
     <option value="">Select Person</option>
-    <option value="Fahad">Fahad</option>
-    <option value="Umar">Umar</option>
-    <option value="Zafar">Zafar</option>
   </select>
 
   <label style="margin-left: 50px;">Source :</label>
   <label id="Source" style="margin-right: 50px;">Loading Source Project ....</label>
   
-
-
-
-
-  <label for="ToProject">Destination</label>
-  <select id="ToProject" name="ToProject" style="margin-right: 50px;" required>
+  <label for="Destination">Destination</label>
+  <select id="Destination" name="Destination" style="margin-right: 50px;" required>
     <option value="">Select Project</option>
-    <option value="SOI Tripura">SOI Tripura</option>
-    <option value="SOI ASSAM">SOI ASSAM</option>
-    <option value="SOI HP">SOI HP</option>
   </select>
 
   <div class="form-footer">
-    <h4 id = "statusMessage"style="margin-left: 730px; margin-right: 5px; font-weight: normal;">Press this button to initiate the item transfer process</h4>
+    <input style= "margin-left: 280px" type="button" value="Preview Form" id="previewform">
+
+    <h4 id = "statusMessage"style="margin-left: 400px; margin-right: 5px; font-weight: normal;">Press this button to initiate the item transfer process</h4>
     <input style= "margin-left: 5px" type="button" value="Transfer Items" id="submitButton">
+
+
   </div>
 
   <div class="curved-rectangle">
@@ -142,6 +136,21 @@ th {
 </form>
   <script>
        
+       document.getElementById("previewform").addEventListener("click", function(event) {
+    event.preventDefault(); // Prevent default button behavior (form submission)
+
+    // Get the HTML content of the form
+    var formHTML = document.getElementById("handoverForm").outerHTML;
+
+    // Open a new window or tab with the form HTML
+    var previewWindow = window.open("", "Form Preview", "width=800,height=600");
+    
+    // Write the form HTML to the new window or tab
+    previewWindow.document.write(formHTML);
+});
+
+
+
     // Add event listeners to select elements to check for default option
     var selectElements = document.querySelectorAll('select[required]');
     selectElements.forEach(function(selectElement) {
@@ -155,7 +164,6 @@ th {
             }
         });
     });
-
 
 
     document.getElementById("submitButton").addEventListener("click", function(event) {
@@ -174,40 +182,42 @@ th {
         event.preventDefault(); // Prevent form submission
         alert(errorMessage); // Show the error message
     } else {
-        // Check if From Person and To Person, and From Project and To Project are the same
+        // Get sender and receiver details
         var fromPerson = document.getElementById("Sender").textContent.trim();
-        var toPerson = document.getElementById("ToPerson").value;
+        var toPerson = document.getElementById("Receiver").value;
         var fromProject = document.getElementById("Source").textContent.trim();
-        var toProject = document.getElementById("ToProject").value;
-        
+        var toProject = document.getElementById("Destination").value;
+        console.log('fromperson toperson fromproject toproject',fromPerson,toPerson,fromProject,toProject)
+        // Check if From Person and To Person, and From Project and To Project are the same
         if (fromPerson === toPerson && fromProject === toProject) {
             errorMessage = "From Person and To Person, and From Project and To Project should not be the same.";
+        } 
+        // Check if there are no selected items in the first tab's table
+        if (errorMessage === "" && selectedItems.length === 0) {
+            errorMessage = "Please select at least 1 item before initiating the transaction.";
         }
+
+
+        // Check if any condition dropdown has the default option selected
+        var conditionDropdowns = document.querySelectorAll('.tab-content.active select');
+        conditionDropdowns.forEach(function(dropdown) {
+            if (dropdown.value === "") {
+                errorMessage = "Please select a condition for each product.";
+            }
+        });
 
         // If there is any error, prevent form submission and show the error message
         if (errorMessage !== "") {
             event.preventDefault(); // Prevent form submission
             alert(errorMessage); // Show the error message
         } else {
-
-
-            // If there is any error, prevent form submission and show the error message
-            if (errorMessage !== "") {
-                event.preventDefault(); // Prevent form submission
-                alert(errorMessage); // Show the error message
-            } else {
-                // If all validations pass, change the message and disable the button
-                document.getElementById("statusMessage").textContent = "The transfer initiation has begun, please wait for success message";
-                document.getElementById("submitButton").disabled = true;
-                logRowValues();
-            }
+            // If all validations pass, change the message and disable the button
+            document.getElementById("statusMessage").textContent = "The transfer initiation has begun, please wait for success message";
+            document.getElementById("submitButton").disabled = true;
+            logRowValues();
         }
     }
 });
-
-
-
-
 
 
 
@@ -305,7 +315,7 @@ window.onload = function() {
     .then(response => response.json())
     .then(result => {
       const combinedData = result.combined_data;
-      if (Array.isArray(combinedData) && combinedData.length === 2) {
+      if (Array.isArray(combinedData) && combinedData.length === 3) {
         console.log('this is the combined data',combinedData);
         const firstArray = combinedData[0];
         if (Array.isArray(firstArray) && firstArray.length > 0) {
@@ -321,6 +331,29 @@ window.onload = function() {
         initiatedData = combinedData[1];
         displaySelectTable();
         toggleSelectedItemsHeader();
+
+        
+        const names = combinedData[2][0];
+        const projects = combinedData[2][1];
+        
+        // Populate Receiver dropdown
+        const receiverDropdown = document.getElementById('Receiver');
+        names.forEach(name => {
+          const option = document.createElement('option');
+          option.value = name;
+          option.textContent = name;
+          receiverDropdown.appendChild(option);
+        });
+        
+        // Populate Destination dropdown
+        const destinationDropdown = document.getElementById('Destination');
+        projects.forEach(project => {
+          const option = document.createElement('option');
+          option.value = project;
+          option.textContent = project;
+          destinationDropdown.appendChild(option);
+        });
+
 
             
           } else {
@@ -536,7 +569,7 @@ function appendSelectedItem(item) {
   // Condition dropdown
   const conditionCell = document.createElement('td');
   const conditionSelect = document.createElement('select');
-  conditionSelect.innerHTML = '<option value="good">Good</option><option value="notok">Not OK</option><option value="damaged">Damaged</option>';
+  conditionSelect.innerHTML = '<option value="">Select Condition</option><option value="good">Good</option><option value="notok">Not OK</option><option value="damaged">Damaged</option>';
   conditionCell.appendChild(conditionSelect);
   row.appendChild(conditionCell);
 
