@@ -55,7 +55,7 @@
                     <th>Sender</th>
                     <th>Receiver</th>
                     <th>Date of Initiation</th>
-                    <th>Approval Type</th>
+                    <th>Type of Approval</th>
                 </tr>
                 <tr id="filterRow">
                     <th></th>
@@ -144,6 +144,7 @@
                     var senderOptions = [];
                     var receiverOptions = [];
                     var doiOptions = [];
+                    var approvalOptions = [];
 
                     formIDOptions.push("NONE");
                     $('#formIDFilter').append('<option value="'+"NONE"+'">'+"NONE"+'</option>')
@@ -165,6 +166,15 @@
 
                     doiOptions.push("NONE");
                     $('#doiFilter').append('<option value="'+"NONE"+'">'+"NONE"+'</option>')
+
+                    approvalOptions.push("NONE");
+                    $('#approvalFilter').append('<option value="'+"NONE"+'">'+"NONE"+'</option>')
+
+                    approvalOptions.push("Send");
+                    $('#approvalFilter').append('<option value="'+"Send"+'">'+"Send"+'</option>')
+
+                    approvalOptions.push("Receive");
+                    $('#approvalFilter').append('<option value="'+"Receive"+'">'+"Receive"+'</option>')
                     
                     $.each(data, function(index, item) {
                         if(!formIDOptions.includes(item.FormID)) {
@@ -294,6 +304,19 @@
                     }
                     populateTable(filteredData);
                 });
+
+                /*$('#approvalFilter').change(function(){
+                    var approvalOptions = $(this).val();
+                    var filteredData;
+                    if (selectedDOI == "NONE"){
+                        filteredData = allData;
+                    } else {
+                        filteredData = allData.filter(function(item) {
+                            return item.ApprovalType === selectedDOI;
+                        })
+                    }
+                    populateTable(filteredData);
+                });*/
 
                 // Add click event handler for the dynamically created buttons
                 /*$('#transactionTable').on('click', '.viewButton', function(){

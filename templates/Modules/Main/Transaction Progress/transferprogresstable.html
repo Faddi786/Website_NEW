@@ -7,17 +7,36 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <style>  
             table {
-            border-collapse: collapse;
-            width: 100%;
-        }
-        th, td {
-            border: 1px solid #dddddd;
-            text-align: left;
-            padding: 8px;
-        }
-        th {
-            background-color: #f2f2f2;
-        }</style>
+                border-collapse: collapse;
+                width: 100%;
+            }
+            th, td {
+                border: 1px solid #dddddd;
+                text-align: left;
+                padding: 8px;
+            }
+            th {
+                background-color: #f2f2f2;
+            }
+            .btnContainer {
+                width: 95%;
+                text-align: right;
+                padding-top: 20px;
+            }
+            .viewButton {
+                background-color: #404040;
+                color: white;
+                padding: 10px 15px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                width: 100px;
+                margin-top: 20px;
+            }
+            .viewButton:hover{
+                background-color: #404040a2;
+            }
+        </style>
     </head>
     <body>
         <header>
@@ -26,6 +45,7 @@
         <table id="transactionTable">
             <thead>
                 <tr>
+                    <th>Selection</th>
                     <th>Serial No.</th>
                     <th>Form No.</th>
                     <th>E-way Bill</th>
@@ -34,9 +54,10 @@
                     <th>Sender</th>
                     <th>Receiver</th>
                     <th>Date of Initiation</th>
-                    <th>View Button</th>
+                    <th>Type of Approval</th>
                 </tr>
                 <tr id="filterRow">
+                    <th></th>
                     <th></th>
                     <th><select id="formIDFilter"></select></th>
                     <th><select id="ewayFilter"></select></th>
@@ -45,11 +66,15 @@
                     <th><select id="senderFilter"></select></th>
                     <th><select id="receiverFilter"></select></th>
                     <th><select id="doiFilter"></select></th>
+                    <th><select id="approvalFilter"></select></th>
                     <th></th>
                 </tr>
             </thead>
             <tbody id="transactionData"></tbody>
         </table>
+        <div class="btnContainer">
+            <button class="viewButton" id="viewButton">VIEW</button>
+        </div>
         <script>
             $(document).ready(function(){
                 var allData;
@@ -66,6 +91,7 @@
                     $('#transactionData').empty();
                     $.each(data, function(index, transaction){
                         $('#transactionTable tbody').append('<tr>' +
+                            '<td><input type="radio" name="selection" class"radioButton" data-formid="'+ transaction.formID +'"></td>'+
                             '<td>' + (++i) + '</td>' +
                             '<td>' + transaction.FormID + '</td>' +
                             '<td>' + transaction.EwayBillNo + '</td>' +
@@ -74,10 +100,39 @@
                             '<td>' + transaction.FromPerson + '</td>' +
                             '<td>' + transaction.ToPerson + '</td>' +
                             '<td>' + transaction.HandoverDate + '</td>' +
-                            '<td><button class="viewButton" data-formid="' + transaction.FormID + '">View</button></td>' +
+                            '<td>Undefined</td>'+
                             '</tr>');
                     });
                 }
+
+                document.getElementById("viewButton").addEventListener("click", function() {
+                    var table = document.getElementById("transactionTable");
+                    var selectedRow;
+        
+                    // Iterate over the table rows
+                    for (var i = 0; i < table.rows.length; i++) {
+                        // Check if the radio button in this row is selected
+                        var radioButton = table.rows[i].querySelector("input[type='radio']");
+                        if (radioButton && radioButton.checked) {
+                            selectedRow = table.rows[i];
+                            break; // Exit loop if a selected row is found
+                        }
+                    }
+        
+                    // If a selected row is found, retrieve data from the formid column (second column)
+                    if (selectedRow) {
+                        var formid = selectedRow.cells[2].textContent; // Change index if needed
+                        console.log(formid)
+
+                        // Send the form ID to the Flask route using XMLHttpRequest
+                        sendFormID(formid);
+
+                        // Redirect to the desired route
+                        window.location.href = "/display_transaction_progess_table";
+                    } else {
+                        console.log('No formid selected')
+                    }
+                });
 
                 function populateFilterDropdowns(data){
                     // Populate filter dropdowns
@@ -89,6 +144,7 @@
                     var senderOptions = [];
                     var receiverOptions = [];
                     var doiOptions = [];
+                    var approvalOptions = [];
 
                     formIDOptions.push("NONE");
                     $('#formIDFilter').append('<option value="'+"NONE"+'">'+"NONE"+'</option>')
@@ -110,6 +166,15 @@
 
                     doiOptions.push("NONE");
                     $('#doiFilter').append('<option value="'+"NONE"+'">'+"NONE"+'</option>')
+
+                    approvalOptions.push("NONE");
+                    $('#approvalFilter').append('<option value="'+"NONE"+'">'+"NONE"+'</option>')
+
+                    approvalOptions.push("Send");
+                    $('#approvalFilter').append('<option value="'+"Send"+'">'+"Send"+'</option>')
+
+                    approvalOptions.push("Receive");
+                    $('#approvalFilter').append('<option value="'+"Receive"+'">'+"Receive"+'</option>')
 
                     $.each(data, function(index, item) {
                         if(!formIDOptions.includes(item.FormID)) {
@@ -240,8 +305,21 @@
                     populateTable(filteredData);
                 });
 
+                /*$('#approvalFilter').change(function(){
+                    var approvalOptions = $(this).val();
+                    var filteredData;
+                    if (selectedDOI == "NONE"){
+                        filteredData = allData;
+                    } else {
+                        filteredData = allData.filter(function(item) {
+                            return item.ApprovalType === selectedDOI;
+                        })
+                    }
+                    populateTable(filteredData);
+                });*/
+
                 // Add click event handler for the dynamically created buttons
-                $('#transactionTable').on('click', '.viewButton', function(){
+                /*$('#transactionTable').on('click', '.viewButton', function(){
                     var formID = $(this).data('formid');
                     // Perform any action you want with the formID
                     console.log('Form ID:', formID);
@@ -251,7 +329,7 @@
 
                     // Redirect to the desired route
                     window.location.href = "/display_transaction_progess_table";
-                });
+                });*/
             });
 
             // Function to send form ID to Flask route
